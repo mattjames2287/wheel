@@ -3,120 +3,145 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Lucky Date Night Wheel</title>
-  <meta name="description" content="Casino-style activity roulette wheel with price buckets." />
+  <title>Vegas Date Night Wheel</title>
+  <meta name="description" content="A mini Vegas-style roulette wheel for date night ideas." />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="bg-lights"></div>
-  <div class="table-felt"></div>
-
-  <main class="app-shell">
-    <header class="hero">
-      <p class="eyebrow">Casino Night Picker</p>
-      <h1>Lucky Date Night Wheel</h1>
-      <p class="hero-sub">Pick a budget, spin the wheel, and let luck choose the plan.</p>
+  <div class="bg-noise"></div>
+  <div class="coins" id="coins"></div>
+  <div class="page-shell">
+    <header class="hero marquee-frame">
+      <div class="bulbs bulbs-top"></div>
+      <div class="hero-inner">
+        <p class="eyebrow">Lucky Night Out</p>
+        <h1>🎰 Vegas Date Night Wheel</h1>
+        <p class="hero-sub">Pick a budget, spin the wheel, and let the casino decide the night.</p>
+      </div>
+      <div class="bulbs bulbs-bottom"></div>
     </header>
 
-    <section class="app-grid">
-      <aside class="card side-panel left-panel">
-        <div class="panel-block">
-          <h2>Choose Budget</h2>
-          <p class="panel-sub">The wheel only lands on activities from the selected price range.</p>
-          <div id="bucketButtons" class="button-grid"></div>
-        </div>
+    <main class="app-grid">
+      <aside class="panel left-panel">
+        <section class="section-block">
+          <div class="section-head">
+            <h2>Choose Budget</h2>
+            <p>Each spin only lands on activities inside the selected bucket.</p>
+          </div>
+          <div id="bucketButtons" class="bucket-grid"></div>
+        </section>
 
-        <div class="panel-block">
+        <section class="section-block mode-block">
+          <div class="section-head">
+            <h2>Game Mode</h2>
+            <p>Classic picks one activity. Date Night adds food and movie ideas too.</p>
+          </div>
+          <div class="mode-grid">
+            <button id="classicModeBtn" class="mode-btn active">Classic Spin</button>
+            <button id="dateNightModeBtn" class="mode-btn">Date Night Mode</button>
+          </div>
+        </section>
+
+        <section class="section-block toggles-block">
           <button id="spinBtn" class="spin-btn" disabled>
-            <span class="spin-icon">🎰</span>
+            <span class="spin-icon">🎲</span>
             <span>Spin the Wheel</span>
           </button>
 
-          <div class="toggle-list">
-            <label class="toggle-item">
-              <input type="checkbox" id="removeWinnerToggle" />
-              <span>Remove winner after spin</span>
-            </label>
-            <label class="toggle-item">
-              <input type="checkbox" id="soundToggle" checked />
-              <span>Play casino sound</span>
-            </label>
-          </div>
-        </div>
+          <label class="toggle-row">
+            <input type="checkbox" id="removeWinnerToggle" />
+            <span>Remove winner after spin</span>
+          </label>
 
-        <div class="result-card">
-          <div class="result-label">Current Pick</div>
+          <label class="toggle-row">
+            <input type="checkbox" id="soundToggle" checked />
+            <span>Roulette sound on</span>
+          </label>
+        </section>
+
+        <section class="section-block result-block">
+          <div class="mini-label">Latest Result</div>
           <div id="resultText" class="result-text">Choose a budget to begin</div>
           <div id="resultSub" class="result-sub"></div>
-        </div>
+          <div id="dateNightMini" class="date-night-mini hidden"></div>
+        </section>
 
-        <div class="action-row">
+        <section class="section-block action-block">
           <button id="resetBucketBtn" class="secondary-btn">Reset Current Bucket</button>
-          <button id="resetAllBtn" class="secondary-btn danger-btn">Reset All</button>
-        </div>
+          <button id="resetAllBtn" class="secondary-btn danger-btn">Reset All Defaults</button>
+        </section>
       </aside>
 
-      <section class="card wheel-panel">
-        <div class="wheel-topline">
-          <div>
-            <h2>High Roller Wheel</h2>
-            <p id="wheelNote" class="panel-sub">Wheel will load after you choose a budget.</p>
+      <section class="center-panel">
+        <div class="wheel-card marquee-frame">
+          <div class="bulbs bulbs-top"></div>
+          <div class="wheel-head">
+            <div>
+              <h2>Casino Wheel</h2>
+              <p id="wheelNote">Wheel will load after you choose a budget.</p>
+            </div>
+            <div class="legend-chip">Lucky Pick</div>
           </div>
-          <div class="chip-row">
-            <span class="chip gold">Luck</span>
-            <span class="chip red">Date Night</span>
-          </div>
-        </div>
 
-        <div class="wheel-stage">
-          <div class="marquee-ring"></div>
-          <div class="wheel-pointer"></div>
-          <div class="wheel-wrap">
-            <canvas id="wheelCanvas" width="820" height="820"></canvas>
-            <div class="wheel-center">JACKPOT</div>
+          <div class="wheel-stage">
+            <div class="wheel-pointer"></div>
+            <div class="wheel-wrap">
+              <div class="wheel-lights" id="wheelLights"></div>
+              <canvas id="wheelCanvas" width="900" height="900"></canvas>
+              <div class="wheel-center">SPIN</div>
+            </div>
           </div>
+          <div class="wheel-footer-glow"></div>
+          <div class="bulbs bulbs-bottom"></div>
         </div>
       </section>
 
-      <aside class="card side-panel right-panel">
-        <div class="panel-block">
-          <h2>Manage Activities</h2>
-          <p class="panel-sub">Changes save in this browser on this device. The shared link still works for anyone with the preloaded activities in the code.</p>
+      <aside class="panel right-panel">
+        <section class="section-block">
+          <div class="section-head">
+            <h2>Manage Activities</h2>
+            <p>Add or remove activities. Saved on each device separately.</p>
+          </div>
 
           <label class="field-label" for="adminBucket">Bucket</label>
           <select id="adminBucket" class="field-input"></select>
 
           <label class="field-label" for="activityEmoji">Emoji</label>
-          <input id="activityEmoji" class="field-input" type="text" maxlength="4" placeholder="🎳" />
+          <input id="activityEmoji" class="field-input" type="text" maxlength="6" placeholder="🍣" />
 
           <label class="field-label" for="activityName">Activity Name</label>
-          <input id="activityName" class="field-input" type="text" placeholder="Bowling Night" />
+          <input id="activityName" class="field-input" type="text" placeholder="Sushi Date" />
 
           <button id="addActivityBtn" class="add-btn">Add Activity</button>
-        </div>
+        </section>
 
-        <div class="panel-block activity-section">
-          <div class="activity-header">
-            <h3>Activity List</h3>
+        <section class="section-block activity-list-block">
+          <div class="activity-head">
+            <h3>Bucket Activities</h3>
             <span id="bucketCount" class="count-pill">0 activities</span>
           </div>
           <div id="activityList" class="activity-list"></div>
-        </div>
+        </section>
       </aside>
-    </section>
-  </main>
-
-  <div id="winnerModal" class="winner-modal hidden" aria-hidden="true">
-    <div class="winner-backdrop"></div>
-    <div class="winner-card">
-      <div class="winner-top">Winner</div>
-      <div id="winnerModalText" class="winner-title">🎉 Lucky Pick</div>
-      <div id="winnerModalSub" class="winner-sub">Chosen activity</div>
-      <button id="closeWinnerBtn" class="close-winner-btn">Nice</button>
-    </div>
+    </main>
   </div>
 
-  <canvas id="confettiCanvas" class="confetti-canvas"></canvas>
+  <div id="winnerOverlay" class="winner-overlay hidden" aria-hidden="true">
+    <div class="winner-popup marquee-frame">
+      <div class="bulbs bulbs-top"></div>
+      <div class="winner-inner">
+        <div class="winner-banner">🏆 WINNER 🏆</div>
+        <div id="winnerMain" class="winner-main"></div>
+        <div id="winnerBudget" class="winner-budget"></div>
+        <div id="winnerExtras" class="winner-extras"></div>
+        <div class="winner-actions">
+          <button id="spinAgainBtn" class="secondary-btn gold-btn">Spin Again</button>
+          <button id="closeWinnerBtn" class="secondary-btn">Close</button>
+        </div>
+      </div>
+      <div class="bulbs bulbs-bottom"></div>
+    </div>
+  </div>
 
   <script src="app.js"></script>
 </body>

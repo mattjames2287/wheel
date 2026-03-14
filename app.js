@@ -1,21 +1,22 @@
-const STORAGE_KEY = "activityRouletteCasino_v1";
+const STORAGE_KEY = "vegasWheelBuckets_v1";
+const MODE_KEY = "vegasWheelMode_v1";
 
 const DEFAULT_BUCKETS = {
   "$0–25": {
-    color: "#17704a",
+    color: "#111111",
     items: [
       { emoji: "🍦", name: "Ice Cream Date" },
+      { emoji: "☕", name: "Coffee Shop Run" },
       { emoji: "🌳", name: "Park Walk" },
-      { emoji: "☕", name: "Coffee Shop Visit" },
-      { emoji: "🧺", name: "Picnic" },
-      { emoji: "🎬", name: "Movie Night at Home" },
+      { emoji: "🧺", name: "Sunset Picnic" },
       { emoji: "🎲", name: "Board Game Night" },
-      { emoji: "🍩", name: "Dessert Run" },
-      { emoji: "📸", name: "Photo Walk" }
+      { emoji: "🍩", name: "Dessert Crawl" },
+      { emoji: "📸", name: "Photo Walk" },
+      { emoji: "🎬", name: "Movie Night at Home" }
     ]
   },
   "$25–50": {
-    color: "#0f5ea8",
+    color: "#b10f1d",
     items: [
       { emoji: "🎳", name: "Bowling" },
       { emoji: "🍔", name: "Casual Dinner Out" },
@@ -28,7 +29,7 @@ const DEFAULT_BUCKETS = {
     ]
   },
   "$50–100": {
-    color: "#7b1db9",
+    color: "#111111",
     items: [
       { emoji: "🍽️", name: "Nice Dinner" },
       { emoji: "🎤", name: "Concert Tickets" },
@@ -41,7 +42,7 @@ const DEFAULT_BUCKETS = {
     ]
   },
   "$100+": {
-    color: "#b5121b",
+    color: "#b10f1d",
     items: [
       { emoji: "🏕️", name: "Weekend Getaway" },
       { emoji: "🎈", name: "Hot Air Balloon Ride" },
@@ -55,18 +56,28 @@ const DEFAULT_BUCKETS = {
   }
 };
 
+const RESTAURANT_TYPES = [
+  "🍝 Italian", "🍣 Sushi", "🌮 Tacos", "🍔 Burgers", "🥩 Steakhouse", "🍜 Ramen",
+  "🍕 Pizza", "🥞 Breakfast Spot", "🍛 Curry", "🥗 Healthy Café", "🥟 Dumplings", "🥘 Mediterranean"
+];
+
+const MOVIE_GENRES = [
+  "🎬 Rom-Com", "🕵️ Mystery", "😂 Comedy", "💥 Action", "👻 Horror", "🚀 Sci-Fi",
+  "✨ Fantasy", "❤️ Romance", "🎵 Musical", "🧠 Thriller", "🧸 Animated", "📚 Drama"
+];
+
 const canvas = document.getElementById("wheelCanvas");
 const ctx = canvas.getContext("2d");
-const confettiCanvas = document.getElementById("confettiCanvas");
-const confettiCtx = confettiCanvas.getContext("2d");
-
 const bucketButtons = document.getElementById("bucketButtons");
+const classicModeBtn = document.getElementById("classicModeBtn");
+const dateNightModeBtn = document.getElementById("dateNightModeBtn");
 const spinBtn = document.getElementById("spinBtn");
-const resultText = document.getElementById("resultText");
-const resultSub = document.getElementById("resultSub");
-const wheelNote = document.getElementById("wheelNote");
 const removeWinnerToggle = document.getElementById("removeWinnerToggle");
 const soundToggle = document.getElementById("soundToggle");
+const resultText = document.getElementById("resultText");
+const resultSub = document.getElementById("resultSub");
+const dateNightMini = document.getElementById("dateNightMini");
+const wheelNote = document.getElementById("wheelNote");
 const adminBucket = document.getElementById("adminBucket");
 const activityEmoji = document.getElementById("activityEmoji");
 const activityName = document.getElementById("activityName");
@@ -75,22 +86,26 @@ const activityList = document.getElementById("activityList");
 const bucketCount = document.getElementById("bucketCount");
 const resetBucketBtn = document.getElementById("resetBucketBtn");
 const resetAllBtn = document.getElementById("resetAllBtn");
-const winnerModal = document.getElementById("winnerModal");
-const winnerModalText = document.getElementById("winnerModalText");
-const winnerModalSub = document.getElementById("winnerModalSub");
+const winnerOverlay = document.getElementById("winnerOverlay");
+const winnerMain = document.getElementById("winnerMain");
+const winnerBudget = document.getElementById("winnerBudget");
+const winnerExtras = document.getElementById("winnerExtras");
+const spinAgainBtn = document.getElementById("spinAgainBtn");
 const closeWinnerBtn = document.getElementById("closeWinnerBtn");
+const coinsLayer = document.getElementById("coins");
+const wheelLights = document.getElementById("wheelLights");
 
 const size = canvas.width;
 const center = size / 2;
-const radius = 332;
+const radius = 320;
+const ringRadius = 360;
 
 let buckets = loadBuckets();
 let selectedBucket = null;
 let currentItems = [];
 let currentRotation = 0;
 let isSpinning = false;
-let confettiPieces = [];
-let confettiAnim = null;
+let currentMode = loadMode();
 
 function deepClone(obj) {
   return JSON.parse(JSON.stringify(obj));
@@ -110,13 +125,61 @@ function saveBuckets() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(buckets));
 }
 
-function init() {
-  resizeConfettiCanvas();
-  window.addEventListener("resize", resizeConfettiCanvas);
-  buildBucketButtons();
-  buildAdminBucketSelect();
-  syncAdminList();
-  drawEmptyWheel();
+function loadMode() {
+  return localStorage.getItem(MODE_KEY) || "classic";
+}
+
+function saveMode() {
+  localStorage.setItem(MODE_KEY, currentMode);
+}
+
+function initBulbs() {
+  document.querySelectorAll(".bulbs").forEach((row) => {
+    row.innerHTML = "";
+    for (let i = 0; i < 22; i++) {
+      const bulb = document.createElement("span");
+      bulb.style.animationDelay = `${(i % 6) * 0.12}s`;
+      row.appendChild(bulb);
+    }
+  });
+}
+
+function initWheelLights() {
+  for (let i = 0; i < 24; i++) {
+    const bulb = document.createElement("span");
+    const angle = (i / 24) * Math.PI * 2;
+    const x = 50 + Math.cos(angle) * 49;
+    const y = 50 + Math.sin(angle) * 49;
+    bulb.style.cssText = `
+      position:absolute;
+      left:${x}%;
+      top:${y}%;
+      width:16px;height:16px;border-radius:50%;
+      transform:translate(-50%,-50%);
+      background:${i % 2 === 0 ? '#ffd66d' : '#fff1bc'};
+      box-shadow:0 0 8px rgba(255,212,97,.85),0 0 18px rgba(255,212,97,.55);
+      animation: bulbFlash ${0.8 + (i % 3) * 0.18}s infinite alternate;
+      animation-delay:${i * 0.05}s;
+    `;
+    wheelLights.appendChild(bulb);
+  }
+}
+
+function setMode(mode) {
+  currentMode = mode;
+  classicModeBtn.classList.toggle("active", mode === "classic");
+  dateNightModeBtn.classList.toggle("active", mode === "dateNight");
+  saveMode();
+
+  if (mode === "dateNight") {
+    wheelNote.textContent = selectedBucket
+      ? `${currentItems.length} activities in ${selectedBucket}. Spin also picks food and movie ideas.`
+      : "Date Night Mode adds a restaurant type and movie genre to the winning activity.";
+  } else if (selectedBucket) {
+    wheelNote.textContent = `${currentItems.length} possible activities in ${selectedBucket}`;
+  } else {
+    wheelNote.textContent = "Wheel will load after you choose a budget.";
+  }
 }
 
 function buildBucketButtons() {
@@ -124,7 +187,7 @@ function buildBucketButtons() {
   Object.keys(buckets).forEach((bucketName) => {
     const btn = document.createElement("button");
     btn.className = "bucket-btn";
-    btn.style.background = `linear-gradient(180deg, ${shadeColor(buckets[bucketName].color, 18)}, ${buckets[bucketName].color})`;
+    btn.style.background = `linear-gradient(180deg, ${shadeColor(buckets[bucketName].color, 20)}, ${buckets[bucketName].color})`;
     btn.textContent = `${bucketName} (${buckets[bucketName].items.length})`;
     btn.addEventListener("click", () => selectBucket(bucketName));
     bucketButtons.appendChild(btn);
@@ -139,7 +202,6 @@ function buildAdminBucketSelect() {
     option.textContent = bucketName;
     adminBucket.appendChild(option);
   });
-  adminBucket.onchange = syncAdminList;
 }
 
 function setActiveBucketButton(bucketName) {
@@ -152,12 +214,14 @@ function selectBucket(bucketName) {
   selectedBucket = bucketName;
   currentItems = [...buckets[bucketName].items];
   currentRotation = 0;
-  setActiveBucketButton(bucketName);
   adminBucket.value = bucketName;
+  setActiveBucketButton(bucketName);
+  spinBtn.disabled = currentItems.length === 0;
   resultText.textContent = "Ready to spin";
   resultSub.textContent = `Budget selected: ${bucketName}`;
-  wheelNote.textContent = `${currentItems.length} possible activities in ${bucketName}`;
-  spinBtn.disabled = currentItems.length === 0;
+  dateNightMini.classList.add("hidden");
+  dateNightMini.innerHTML = "";
+  setMode(currentMode);
   syncAdminList();
   drawWheel();
 }
@@ -184,13 +248,10 @@ function syncAdminList() {
       saveBuckets();
       buildBucketButtons();
       syncAdminList();
-
       if (selectedBucket === bucketName) {
         currentItems = [...buckets[bucketName].items];
         spinBtn.disabled = currentItems.length === 0;
-        wheelNote.textContent = currentItems.length
-          ? `${currentItems.length} possible activities in ${bucketName}`
-          : `No activities left in ${bucketName}`;
+        setMode(currentMode);
         drawWheel();
       }
     });
@@ -215,7 +276,7 @@ function addActivity() {
   if (selectedBucket === bucketName) {
     currentItems = [...buckets[bucketName].items];
     spinBtn.disabled = currentItems.length === 0;
-    wheelNote.textContent = `${currentItems.length} possible activities in ${bucketName}`;
+    setMode(currentMode);
     drawWheel();
   }
 
@@ -232,7 +293,7 @@ function resetCurrentBucket() {
   syncAdminList();
   currentItems = [...buckets[selectedBucket].items];
   spinBtn.disabled = currentItems.length === 0;
-  wheelNote.textContent = `${currentItems.length} possible activities in ${selectedBucket}`;
+  setMode(currentMode);
   drawWheel();
 }
 
@@ -241,55 +302,47 @@ function resetAllBuckets() {
   saveBuckets();
   buildBucketButtons();
   buildAdminBucketSelect();
-
   if (selectedBucket) {
     currentItems = [...buckets[selectedBucket].items];
+    adminBucket.value = selectedBucket;
     spinBtn.disabled = currentItems.length === 0;
-    wheelNote.textContent = `${currentItems.length} possible activities in ${selectedBucket}`;
-    syncAdminList();
+    setMode(currentMode);
     drawWheel();
   } else {
-    syncAdminList();
     drawEmptyWheel();
   }
+  syncAdminList();
 }
 
 function drawEmptyWheel() {
   ctx.clearRect(0, 0, size, size);
   ctx.save();
   ctx.translate(center, center);
-
-  const gradient = ctx.createRadialGradient(0, 0, 100, 0, 0, radius);
-  gradient.addColorStop(0, "#3c1417");
-  gradient.addColorStop(1, "#140708");
-
+  ctx.beginPath();
+  ctx.arc(0, 0, ringRadius, 0, Math.PI * 2);
+  ctx.fillStyle = "rgba(255,215,120,.08)";
+  ctx.fill();
   ctx.beginPath();
   ctx.arc(0, 0, radius, 0, Math.PI * 2);
-  ctx.fillStyle = gradient;
+  ctx.fillStyle = "rgba(15,8,9,.95)";
   ctx.fill();
-
-  ctx.beginPath();
-  ctx.arc(0, 0, radius + 4, 0, Math.PI * 2);
-  ctx.lineWidth = 8;
-  ctx.strokeStyle = "rgba(247,212,107,0.85)";
-  ctx.stroke();
-
   ctx.restore();
+
+  ctx.fillStyle = "#fff0b0";
   ctx.textAlign = "center";
-  ctx.fillStyle = "#fff2c8";
-  ctx.font = "bold 34px Arial";
-  ctx.fillText("Select a budget", center, center - 10);
-  ctx.font = "18px Arial";
-  ctx.fillStyle = "#f0dba7";
-  ctx.fillText("The wheel will load activities here", center, center + 24);
+  ctx.font = "bold 36px Arial";
+  ctx.fillText("Pick a budget", center, center - 12);
+  ctx.font = "20px Arial";
+  ctx.fillStyle = "#e2cfa4";
+  ctx.fillText("The Vegas wheel loads your activities here", center, center + 26);
 }
 
 function shadeColor(hex, amt) {
   const clean = hex.replace("#", "");
   const num = parseInt(clean, 16);
   let r = (num >> 16) + amt;
-  let g = ((num >> 8) & 0x00ff) + amt;
-  let b = (num & 0x0000ff) + amt;
+  let g = ((num >> 8) & 255) + amt;
+  let b = (num & 255) + amt;
   r = Math.max(0, Math.min(255, r));
   g = Math.max(0, Math.min(255, g));
   b = Math.max(0, Math.min(255, b));
@@ -297,16 +350,16 @@ function shadeColor(hex, amt) {
 }
 
 function drawWheelText(text) {
-  const maxWidth = radius - 30;
+  const maxWidth = radius - 80;
   const words = text.split(" ");
   const lines = [];
   let line = "";
 
-  ctx.font = "bold 22px Arial";
-  ctx.fillStyle = "#fffaf0";
+  ctx.font = "bold 24px Arial";
+  ctx.fillStyle = "#fff7de";
   ctx.textAlign = "right";
 
-  for (const word of words) {
+  words.forEach((word) => {
     const testLine = line ? `${line} ${word}` : word;
     if (ctx.measureText(testLine).width > maxWidth && line) {
       lines.push(line);
@@ -314,13 +367,13 @@ function drawWheelText(text) {
     } else {
       line = testLine;
     }
-  }
+  });
   if (line) lines.push(line);
 
-  const lineHeight = 26;
+  const lineHeight = 28;
   const startY = -((lines.length - 1) * lineHeight) / 2;
   lines.forEach((ln, index) => {
-    ctx.fillText(ln, radius - 18, startY + index * lineHeight);
+    ctx.fillText(ln, radius - 36, startY + index * lineHeight);
   });
 }
 
@@ -332,25 +385,21 @@ function drawWheel() {
   }
 
   const slice = (Math.PI * 2) / currentItems.length;
-  const altColors = ["#b5121b", "#141414", "#17704a", "#7b1db9", "#0f5ea8", "#734700"];
-
   for (let i = 0; i < currentItems.length; i++) {
     const start = currentRotation + i * slice;
     const end = start + slice;
+    const isRed = i % 2 === 0;
+    const segColor = isRed ? "#b11420" : "#111111";
 
     ctx.beginPath();
     ctx.moveTo(center, center);
     ctx.arc(center, center, radius, start, end);
     ctx.closePath();
-    ctx.fillStyle = altColors[i % altColors.length];
+    ctx.fillStyle = segColor;
     ctx.fill();
 
-    ctx.beginPath();
-    ctx.moveTo(center, center);
-    ctx.arc(center, center, radius, start, end);
-    ctx.closePath();
-    ctx.lineWidth = 3;
-    ctx.strokeStyle = "rgba(255,233,164,0.85)";
+    ctx.lineWidth = 4;
+    ctx.strokeStyle = "#d2a034";
     ctx.stroke();
 
     ctx.save();
@@ -361,18 +410,25 @@ function drawWheel() {
   }
 
   ctx.beginPath();
-  ctx.arc(center, center, radius + 4, 0, Math.PI * 2);
-  ctx.lineWidth = 9;
-  ctx.strokeStyle = "rgba(247,212,107,0.95)";
+  ctx.arc(center, center, ringRadius, 0, Math.PI * 2);
+  ctx.lineWidth = 18;
+  ctx.strokeStyle = "#d7a438";
   ctx.stroke();
 
   ctx.beginPath();
-  ctx.arc(center, center, 78, 0, Math.PI * 2);
-  const centerGrad = ctx.createRadialGradient(center - 20, center - 20, 10, center, center, 78);
-  centerGrad.addColorStop(0, "#fff2c8");
-  centerGrad.addColorStop(0.5, "#f7d46b");
-  centerGrad.addColorStop(1, "#d39b18");
-  ctx.fillStyle = centerGrad;
+  ctx.arc(center, center, radius + 10, 0, Math.PI * 2);
+  ctx.lineWidth = 10;
+  ctx.strokeStyle = "rgba(255,235,185,.9)";
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.arc(center, center, 95, 0, Math.PI * 2);
+  ctx.fillStyle = "#130607";
+  ctx.fill();
+
+  ctx.beginPath();
+  ctx.arc(center, center, 88, 0, Math.PI * 2);
+  ctx.fillStyle = "#f2c24c";
   ctx.fill();
 }
 
@@ -380,58 +436,129 @@ function easeOutCubic(t) {
   return 1 - Math.pow(1 - t, 3);
 }
 
-function playTick(durationMs = 60, freq = 900, volume = 0.02, type = "square") {
+function getRandomItem(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+function playTick(durationMs = 42, freq = 900, volume = 0.022) {
   if (!soundToggle.checked) return;
   const AudioContextClass = window.AudioContext || window.webkitAudioContext;
   if (!AudioContextClass) return;
-
-  if (!window.__casinoAudioCtx) {
-    window.__casinoAudioCtx = new AudioContextClass();
-  }
-
-  const ac = window.__casinoAudioCtx;
-  if (ac.state === "suspended") ac.resume();
-
+  if (!window.__vegasAudioCtx) window.__vegasAudioCtx = new AudioContextClass();
+  const ac = window.__vegasAudioCtx;
   const osc = ac.createOscillator();
   const gain = ac.createGain();
   const now = ac.currentTime;
-
-  osc.type = type;
-  osc.frequency.setValueAtTime(freq, now);
+  osc.type = "square";
+  osc.frequency.value = freq;
   gain.gain.setValueAtTime(volume, now);
   gain.gain.exponentialRampToValueAtTime(0.0001, now + durationMs / 1000);
-
   osc.connect(gain);
   gain.connect(ac.destination);
   osc.start(now);
   osc.stop(now + durationMs / 1000);
 }
 
-function playWinnerSound() {
+function playWinSound() {
   if (!soundToggle.checked) return;
-  playTick(130, 880, 0.03, "triangle");
-  setTimeout(() => playTick(130, 1175, 0.028, "triangle"), 120);
-  setTimeout(() => playTick(180, 1568, 0.026, "triangle"), 250);
+  const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+  if (!AudioContextClass) return;
+  if (!window.__vegasAudioCtx) window.__vegasAudioCtx = new AudioContextClass();
+  const ac = window.__vegasAudioCtx;
+  const notes = [660, 880, 1046, 1320];
+  notes.forEach((freq, i) => {
+    const osc = ac.createOscillator();
+    const gain = ac.createGain();
+    const start = ac.currentTime + i * 0.09;
+    osc.type = "triangle";
+    osc.frequency.value = freq;
+    gain.gain.setValueAtTime(0.0001, start);
+    gain.gain.exponentialRampToValueAtTime(0.05, start + 0.02);
+    gain.gain.exponentialRampToValueAtTime(0.0001, start + 0.22);
+    osc.connect(gain);
+    gain.connect(ac.destination);
+    osc.start(start);
+    osc.stop(start + 0.23);
+  });
+}
+
+function launchConfetti() {
+  const duration = 1800;
+  const end = Date.now() + duration;
+  const colors = ["#ffd66d", "#b11420", "#ffffff", "#111111"];
+  const confettiContainer = document.createElement("div");
+  confettiContainer.style.cssText = "position:fixed;inset:0;pointer-events:none;z-index:24;overflow:hidden;";
+  document.body.appendChild(confettiContainer);
+
+  const timer = setInterval(() => {
+    for (let i = 0; i < 24; i++) {
+      const piece = document.createElement("span");
+      const left = Math.random() * 100;
+      const size = 6 + Math.random() * 8;
+      piece.style.cssText = `position:absolute;left:${left}%;top:-18px;width:${size}px;height:${size * 1.6}px;background:${colors[Math.floor(Math.random() * colors.length)]};transform:rotate(${Math.random() * 360}deg);opacity:1;border-radius:2px;animation:confettiDrop ${1.3 + Math.random() * 1.3}s linear forwards;`;
+      confettiContainer.appendChild(piece);
+      piece.animate([
+        { transform: `translateY(0) rotate(0deg)` },
+        { transform: `translateY(${window.innerHeight + 50}px) rotate(${260 + Math.random() * 300}deg)` }
+      ], {
+        duration: 1300 + Math.random() * 1200,
+        easing: "cubic-bezier(.2,.6,.3,1)",
+        fill: "forwards"
+      });
+      setTimeout(() => piece.remove(), 2600);
+    }
+    if (Date.now() > end) {
+      clearInterval(timer);
+      setTimeout(() => confettiContainer.remove(), 2800);
+    }
+  }, 120);
+}
+
+function launchCoins() {
+  for (let i = 0; i < 26; i++) {
+    const coin = document.createElement("span");
+    coin.className = "coin";
+    coin.style.left = `${Math.random() * 100}%`;
+    coin.style.animationDuration = `${2.3 + Math.random() * 1.8}s`;
+    coin.style.animationDelay = `${Math.random() * 0.35}s`;
+    coin.style.width = `${14 + Math.random() * 16}px`;
+    coin.style.height = coin.style.width;
+    coinsLayer.appendChild(coin);
+    setTimeout(() => coin.remove(), 4200);
+  }
+}
+
+function showWinnerPopup(mainText, budgetText, extrasHtml) {
+  winnerMain.textContent = mainText;
+  winnerBudget.textContent = budgetText;
+  winnerExtras.innerHTML = extrasHtml || "";
+  winnerOverlay.classList.remove("hidden");
+  winnerOverlay.setAttribute("aria-hidden", "false");
+}
+
+function hideWinnerPopup() {
+  winnerOverlay.classList.add("hidden");
+  winnerOverlay.setAttribute("aria-hidden", "true");
 }
 
 function spinWheel() {
   if (!selectedBucket || !currentItems.length || isSpinning) return;
-
-  hideWinnerModal();
+  hideWinnerPopup();
   isSpinning = true;
   spinBtn.disabled = true;
   resultText.textContent = "Spinning...";
   resultSub.textContent = `Budget: ${selectedBucket}`;
+  dateNightMini.classList.add("hidden");
+  dateNightMini.innerHTML = "";
 
   const winnerIndex = Math.floor(Math.random() * currentItems.length);
   const slice = (Math.PI * 2) / currentItems.length;
   const targetSliceCenter = winnerIndex * slice + slice / 2;
-  const normalizedTarget = (Math.PI * 1.5) - targetSliceCenter;
-  const extraSpins = (Math.PI * 2) * (6 + Math.random() * 2);
+  const normalizedTarget = Math.PI * 1.5 - targetSliceCenter;
+  const extraSpins = Math.PI * 2 * (7 + Math.random() * 2.5);
   const startRotation = currentRotation;
   const finalRotation = extraSpins + normalizedTarget;
-
-  const duration = 4700;
+  const duration = 5200;
   const startTime = performance.now();
   let lastTick = 0;
 
@@ -442,9 +569,9 @@ function spinWheel() {
     currentRotation = startRotation + (finalRotation - startRotation) * eased;
     drawWheel();
 
-    const tickGap = 38 + progress * 130;
+    const tickGap = 26 + progress * 180;
     if (now - lastTick > tickGap) {
-      playTick(50, 900 - progress * 260, 0.02, "square");
+      playTick(38, 970 - progress * 380, 0.02);
       lastTick = now;
     }
 
@@ -455,20 +582,34 @@ function spinWheel() {
 
     currentRotation = currentRotation % (Math.PI * 2);
     drawWheel();
-
     const winningItem = currentItems[winnerIndex];
+    let extras = "";
+    let mini = "";
+
     resultText.textContent = `${winningItem.emoji || "🎯"} ${winningItem.name}`;
     resultSub.textContent = `Chosen from ${selectedBucket}`;
 
-    playWinnerSound();
+    if (currentMode === "dateNight") {
+      const restaurant = getRandomItem(RESTAURANT_TYPES);
+      const movie = getRandomItem(MOVIE_GENRES);
+      mini = `<strong>Food:</strong> ${restaurant}<br><strong>Movie:</strong> ${movie}`;
+      extras = `<div><strong>Restaurant Type:</strong> ${restaurant}</div><div><strong>Movie Genre:</strong> ${movie}</div>`;
+      dateNightMini.innerHTML = mini;
+      dateNightMini.classList.remove("hidden");
+    }
+
+    playWinSound();
     launchConfetti();
-    showWinnerModal(winningItem, selectedBucket);
+    launchCoins();
+    showWinnerPopup(
+      `${winningItem.emoji || "🎯"} ${winningItem.name}`,
+      `${selectedBucket} • ${currentMode === 'dateNight' ? 'Date Night Mode' : 'Classic Spin'}`,
+      extras
+    );
 
     if (removeWinnerToggle.checked) {
       const liveItems = buckets[selectedBucket].items;
-      const realIndex = liveItems.findIndex(
-        (item) => item.name === winningItem.name && item.emoji === winningItem.emoji
-      );
+      const realIndex = liveItems.findIndex((item) => item.name === winningItem.name && item.emoji === winningItem.emoji);
       if (realIndex !== -1) {
         liveItems.splice(realIndex, 1);
         saveBuckets();
@@ -479,98 +620,43 @@ function spinWheel() {
     }
 
     spinBtn.disabled = currentItems.length === 0;
-    wheelNote.textContent = currentItems.length
-      ? `${currentItems.length} possible activities in ${selectedBucket}`
-      : `No activities left in ${selectedBucket}`;
+    setMode(currentMode);
     isSpinning = false;
   }
 
   requestAnimationFrame(animate);
 }
 
-function showWinnerModal(item, bucketName) {
-  winnerModalText.textContent = `${item.emoji || "🎯"} ${item.name}`;
-  winnerModalSub.textContent = `Chosen from ${bucketName}`;
-  winnerModal.classList.remove("hidden");
-  winnerModal.setAttribute("aria-hidden", "false");
+function init() {
+  initBulbs();
+  initWheelLights();
+  buildBucketButtons();
+  buildAdminBucketSelect();
+  syncAdminList();
+  setMode(currentMode);
+  drawEmptyWheel();
 }
 
-function hideWinnerModal() {
-  winnerModal.classList.add("hidden");
-  winnerModal.setAttribute("aria-hidden", "true");
-}
-
-function resizeConfettiCanvas() {
-  confettiCanvas.width = window.innerWidth;
-  confettiCanvas.height = window.innerHeight;
-}
-
-function launchConfetti() {
-  confettiPieces = [];
-  const colors = ["#f7d46b", "#b5121b", "#17704a", "#ffffff", "#0f5ea8"];
-  for (let i = 0; i < 180; i++) {
-    confettiPieces.push({
-      x: confettiCanvas.width / 2,
-      y: confettiCanvas.height * 0.22,
-      vx: (Math.random() - 0.5) * 10,
-      vy: Math.random() * -8 - 2,
-      size: Math.random() * 7 + 4,
-      color: colors[Math.floor(Math.random() * colors.length)],
-      rot: Math.random() * Math.PI * 2,
-      vr: (Math.random() - 0.5) * 0.3,
-      life: 1
-    });
-  }
-
-  if (confettiAnim) cancelAnimationFrame(confettiAnim);
-
-  function frame() {
-    confettiCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
-    let alive = 0;
-
-    confettiPieces.forEach((p) => {
-      p.x += p.vx;
-      p.y += p.vy;
-      p.vy += 0.14;
-      p.rot += p.vr;
-      p.life -= 0.008;
-
-      if (p.life > 0) {
-        alive++;
-        confettiCtx.save();
-        confettiCtx.globalAlpha = Math.max(p.life, 0);
-        confettiCtx.translate(p.x, p.y);
-        confettiCtx.rotate(p.rot);
-        confettiCtx.fillStyle = p.color;
-        confettiCtx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * 0.65);
-        confettiCtx.restore();
-      }
-    });
-
-    if (alive > 0) {
-      confettiAnim = requestAnimationFrame(frame);
-    } else {
-      confettiCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
-      confettiAnim = null;
-    }
-  }
-
-  frame();
-}
-
+classicModeBtn.addEventListener("click", () => setMode("classic"));
+dateNightModeBtn.addEventListener("click", () => setMode("dateNight"));
 addActivityBtn.addEventListener("click", addActivity);
 spinBtn.addEventListener("click", spinWheel);
 resetBucketBtn.addEventListener("click", resetCurrentBucket);
 resetAllBtn.addEventListener("click", resetAllBuckets);
-closeWinnerBtn.addEventListener("click", hideWinnerModal);
-winnerModal.addEventListener("click", (e) => {
-  if (e.target.classList.contains("winner-backdrop")) hideWinnerModal();
+spinAgainBtn.addEventListener("click", () => {
+  hideWinnerPopup();
+  spinWheel();
 });
-document.addEventListener("keydown", (e) => {
-  if (e.key === "Escape") hideWinnerModal();
+closeWinnerBtn.addEventListener("click", hideWinnerPopup);
+winnerOverlay.addEventListener("click", (e) => {
+  if (e.target === winnerOverlay) hideWinnerPopup();
 });
+adminBucket.addEventListener("change", syncAdminList);
 activityName.addEventListener("keydown", (e) => {
   if (e.key === "Enter") addActivity();
+});
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") hideWinnerPopup();
 });
 
 init();
