@@ -1,67 +1,48 @@
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Add Activity</title>
-<link rel="stylesheet" href="style.css">
-</head>
-<body>
-
-<div class="form-page">
-
-<h1>Add New Activity</h1>
-
-<form id="activityForm">
-
-<input type="text" id="emoji" placeholder="Emoji (🎳)" required>
-<input type="text" id="activity" placeholder="Activity name" required>
-
-<select id="price">
-<option value="0-25">$0-25</option>
-<option value="25-50">$25-50</option>
-<option value="50-100">$50-100</option>
-<option value="100+">$100+</option>
-</select>
-
-<input type="text" id="restaurant" placeholder="Restaurant type (optional)">
-<input type="text" id="movie" placeholder="Movie genre (optional)">
-
-<button type="submit">Add Activity</button>
-
-</form>
-
-<div id="formStatus"></div>
-
-</div>
-
 <script>
-
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbztoxKIHtLnHcZmNiL7HyMU6r8k4ze5caW4q2tc7vHk_-XvHvyYc-QtFKV2v6xCCpyK/exec";
 
-document.getElementById("activityForm").addEventListener("submit", async (e)=>{
+document.getElementById("activityForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
 
-e.preventDefault();
+  const status = document.getElementById("formStatus");
+  status.innerText = "Submitting...";
 
-const data = {
-emoji: document.getElementById("emoji").value,
-activity: document.getElementById("activity").value,
-price: document.getElementById("price").value,
-restaurant: document.getElementById("restaurant").value,
-movie: document.getElementById("movie").value
-};
+  const data = {
+    emoji: document.getElementById("emoji").value.trim(),
+    activity: document.getElementById("activity").value.trim(),
+    price: document.getElementById("price").value,
+    restaurant: document.getElementById("restaurant").value.trim(),
+    movie: document.getElementById("movie").value.trim()
+  };
 
-await fetch(SCRIPT_URL,{
-method:"POST",
-body:JSON.stringify(data)
+  try {
+    const res = await fetch(SCRIPT_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "text/plain;charset=utf-8"
+      },
+      body: JSON.stringify(data)
+    });
+
+    const text = await res.text();
+    console.log("Apps Script response:", text);
+
+    let parsed;
+    try {
+      parsed = JSON.parse(text);
+    } catch {
+      parsed = { ok: false, error: "Invalid response: " + text };
+    }
+
+    if (parsed.ok) {
+      status.innerText = "Activity added successfully.";
+      document.getElementById("activityForm").reset();
+    } else {
+      status.innerText = "Error: " + (parsed.error || "Unknown error");
+    }
+  } catch (err) {
+    console.error(err);
+    status.innerText = "Request failed: " + err;
+  }
 });
-
-document.getElementById("formStatus").innerText="Activity Added!";
-
-});
-
 </script>
-
-</body>
-</html>
