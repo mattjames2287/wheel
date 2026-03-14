@@ -8,8 +8,10 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <div class="page-border-lights" id="pageBorderLights" aria-hidden="true"></div>
   <div class="bg-noise"></div>
   <div class="coins" id="coins"></div>
+
   <div class="page-shell">
     <header class="hero marquee-frame">
       <div class="bulbs bulbs-top"></div>
@@ -68,7 +70,7 @@
 
         <section class="section-block action-block">
           <button id="resetBucketBtn" class="secondary-btn">Reset Current Bucket</button>
-          <button id="resetAllBtn" class="secondary-btn danger-btn">Reset All Defaults</button>
+          <button id="resetAllBtn" class="secondary-btn danger-btn">Reset All Local</button>
         </section>
       </aside>
 
@@ -99,8 +101,27 @@
       <aside class="panel right-panel">
         <section class="section-block">
           <div class="section-head">
+            <h2>Shared Activity Source</h2>
+            <p>Edit <strong>activities.json</strong> in this repo and everyone using the link sees the updated list.</p>
+          </div>
+
+          <div class="source-card">
+            <div class="source-status-row">
+              <span class="mini-label small">Source Status</span>
+              <span id="sourceBadge" class="source-badge">Loading...</span>
+            </div>
+            <div id="sourceDetails" class="source-details">Checking shared data file...</div>
+            <div class="source-actions">
+              <button id="reloadSourceBtn" class="secondary-btn gold-btn">Reload Shared File</button>
+              <button id="useLocalBtn" class="secondary-btn">Use Local Copy</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="section-block">
+          <div class="section-head">
             <h2>Manage Activities</h2>
-            <p>Add or remove activities. Saved on each device separately.</p>
+            <p>Add or remove activities. These are local until you copy them into activities.json.</p>
           </div>
 
           <label class="field-label" for="adminBucket">Bucket</label>
@@ -113,6 +134,15 @@
           <input id="activityName" class="field-input" type="text" placeholder="Sushi Date" />
 
           <button id="addActivityBtn" class="add-btn">Add Activity</button>
+        </section>
+
+        <section class="section-block">
+          <div class="section-head compact-head">
+            <h2>JSON Export</h2>
+            <p>Copy this into activities.json when you want to publish your changes.</p>
+          </div>
+          <textarea id="jsonExport" class="json-box" spellcheck="false" readonly></textarea>
+          <button id="copyJsonBtn" class="secondary-btn gold-btn full-btn">Copy JSON</button>
         </section>
 
         <section class="section-block activity-list-block">

@@ -1,0 +1,54 @@
+{
+  "$0–25": {
+    "color": "#111111",
+    "items": [
+      { "emoji": "🍦", "name": "Ice Cream Date" },
+      { "emoji": "☕", "name": "Coffee Shop Run" },
+      { "emoji": "🌳", "name": "Park Walk" },
+      { "emoji": "🧺", "name": "Sunset Picnic" },
+      { "emoji": "🎲", "name": "Board Game Night" },
+      { "emoji": "🍩", "name": "Dessert Crawl" },
+      { "emoji": "📸", "name": "Photo Walk" },
+      { "emoji": "🎬", "name": "Movie Night at Home" }
+    ]
+  },
+  "$25–50": {
+    "color": "#b10f1d",
+    "items": [
+      { "emoji": "🎳", "name": "Bowling" },
+      { "emoji": "🍔", "name": "Casual Dinner Out" },
+      { "emoji": "🖼️", "name": "Museum Visit" },
+      { "emoji": "🕹️", "name": "Arcade Night" },
+      { "emoji": "🧩", "name": "Escape Room" },
+      { "emoji": "🥞", "name": "Brunch Date" },
+      { "emoji": "🐘", "name": "Zoo Visit" },
+      { "emoji": "🎨", "name": "Paint Night" }
+    ]
+  },
+  "$50–100": {
+    "color": "#111111",
+    "items": [
+      { "emoji": "🍽️", "name": "Nice Dinner" },
+      { "emoji": "🎤", "name": "Concert Tickets" },
+      { "emoji": "🚣", "name": "Kayaking Adventure" },
+      { "emoji": "👩‍🍳", "name": "Cooking Class" },
+      { "emoji": "😂", "name": "Comedy Show" },
+      { "emoji": "🚗", "name": "Day Trip" },
+      { "emoji": "🎟️", "name": "Event Tickets" },
+      { "emoji": "🧖", "name": "Spa Visit" }
+    ]
+  },
+  "$100+": {
+    "color": "#b10f1d",
+    "items": [
+      { "emoji": "🏕️", "name": "Weekend Getaway" },
+      { "emoji": "🎈", "name": "Hot Air Balloon Ride" },
+      { "emoji": "🏨", "name": "Hotel Night" },
+      { "emoji": "🥂", "name": "Fancy Tasting Menu" },
+      { "emoji": "🚁", "name": "Adventure Experience" },
+      { "emoji": "🚆", "name": "Special Day Trip" },
+      { "emoji": "🌄", "name": "Cabin Stay" },
+      { "emoji": "🛥️", "name": "Private Tour" }
+    ]
+  }
+}

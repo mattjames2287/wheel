@@ -1,66 +1,55 @@
-const STORAGE_KEY = "vegasWheelBuckets_v1";
-const MODE_KEY = "vegasWheelMode_v1";
+const STORAGE_KEY = "vegasWheelBuckets_v2";
+const MODE_KEY = "vegasWheelMode_v2";
+const SOURCE_KEY = "vegasWheelSourceMode_v1";
+const SOURCE_FILE = "activities.json";
 
 const DEFAULT_BUCKETS = {
-  "$0–25": {
-    color: "#111111",
-    items: [
-      { emoji: "🍦", name: "Ice Cream Date" },
-      { emoji: "☕", name: "Coffee Shop Run" },
-      { emoji: "🌳", name: "Park Walk" },
-      { emoji: "🧺", name: "Sunset Picnic" },
-      { emoji: "🎲", name: "Board Game Night" },
-      { emoji: "🍩", name: "Dessert Crawl" },
-      { emoji: "📸", name: "Photo Walk" },
-      { emoji: "🎬", name: "Movie Night at Home" }
-    ]
-  },
-  "$25–50": {
-    color: "#b10f1d",
-    items: [
-      { emoji: "🎳", name: "Bowling" },
-      { emoji: "🍔", name: "Casual Dinner Out" },
-      { emoji: "🖼️", name: "Museum Visit" },
-      { emoji: "🕹️", name: "Arcade Night" },
-      { emoji: "🧩", name: "Escape Room" },
-      { emoji: "🥞", name: "Brunch Date" },
-      { emoji: "🐘", name: "Zoo Visit" },
-      { emoji: "🎨", name: "Paint Night" }
-    ]
-  },
-  "$50–100": {
-    color: "#111111",
-    items: [
-      { emoji: "🍽️", name: "Nice Dinner" },
-      { emoji: "🎤", name: "Concert Tickets" },
-      { emoji: "🚣", name: "Kayaking Adventure" },
-      { emoji: "👩‍🍳", name: "Cooking Class" },
-      { emoji: "😂", name: "Comedy Show" },
-      { emoji: "🚗", name: "Day Trip" },
-      { emoji: "🎟️", name: "Event Tickets" },
-      { emoji: "🧖", name: "Spa Visit" }
-    ]
-  },
-  "$100+": {
-    color: "#b10f1d",
-    items: [
-      { emoji: "🏕️", name: "Weekend Getaway" },
-      { emoji: "🎈", name: "Hot Air Balloon Ride" },
-      { emoji: "🏨", name: "Hotel Night" },
-      { emoji: "🥂", name: "Fancy Tasting Menu" },
-      { emoji: "🚁", name: "Adventure Experience" },
-      { emoji: "🚆", name: "Special Day Trip" },
-      { emoji: "🌄", name: "Cabin Stay" },
-      { emoji: "🛥️", name: "Private Tour" }
-    ]
-  }
+  "$0–25": { color: "#111111", items: [
+    { emoji: "🍦", name: "Ice Cream Date" },
+    { emoji: "☕", name: "Coffee Shop Run" },
+    { emoji: "🌳", name: "Park Walk" },
+    { emoji: "🧺", name: "Sunset Picnic" },
+    { emoji: "🎲", name: "Board Game Night" },
+    { emoji: "🍩", name: "Dessert Crawl" },
+    { emoji: "📸", name: "Photo Walk" },
+    { emoji: "🎬", name: "Movie Night at Home" }
+  ]},
+  "$25–50": { color: "#b10f1d", items: [
+    { emoji: "🎳", name: "Bowling" },
+    { emoji: "🍔", name: "Casual Dinner Out" },
+    { emoji: "🖼️", name: "Museum Visit" },
+    { emoji: "🕹️", name: "Arcade Night" },
+    { emoji: "🧩", name: "Escape Room" },
+    { emoji: "🥞", name: "Brunch Date" },
+    { emoji: "🐘", name: "Zoo Visit" },
+    { emoji: "🎨", name: "Paint Night" }
+  ]},
+  "$50–100": { color: "#111111", items: [
+    { emoji: "🍽️", name: "Nice Dinner" },
+    { emoji: "🎤", name: "Concert Tickets" },
+    { emoji: "🚣", name: "Kayaking Adventure" },
+    { emoji: "👩‍🍳", name: "Cooking Class" },
+    { emoji: "😂", name: "Comedy Show" },
+    { emoji: "🚗", name: "Day Trip" },
+    { emoji: "🎟️", name: "Event Tickets" },
+    { emoji: "🧖", name: "Spa Visit" }
+  ]},
+  "$100+": { color: "#b10f1d", items: [
+    { emoji: "🏕️", name: "Weekend Getaway" },
+    { emoji: "🎈", name: "Hot Air Balloon Ride" },
+    { emoji: "🏨", name: "Hotel Night" },
+    { emoji: "🥂", name: "Fancy Tasting Menu" },
+    { emoji: "🚁", name: "Adventure Experience" },
+    { emoji: "🚆", name: "Special Day Trip" },
+    { emoji: "🌄", name: "Cabin Stay" },
+    { emoji: "🛥️", name: "Private Tour" }
+  ]}
 };
 
 const RESTAURANT_TYPES = [
   "🍝 Italian", "🍣 Sushi", "🌮 Tacos", "🍔 Burgers", "🥩 Steakhouse", "🍜 Ramen",
   "🍕 Pizza", "🥞 Breakfast Spot", "🍛 Curry", "🥗 Healthy Café", "🥟 Dumplings", "🥘 Mediterranean"
 ];
-
 const MOVIE_GENRES = [
   "🎬 Rom-Com", "🕵️ Mystery", "😂 Comedy", "💥 Action", "👻 Horror", "🚀 Sci-Fi",
   "✨ Fantasy", "❤️ Romance", "🎵 Musical", "🧠 Thriller", "🧸 Animated", "📚 Drama"
@@ -94,43 +83,99 @@ const spinAgainBtn = document.getElementById("spinAgainBtn");
 const closeWinnerBtn = document.getElementById("closeWinnerBtn");
 const coinsLayer = document.getElementById("coins");
 const wheelLights = document.getElementById("wheelLights");
+const sourceBadge = document.getElementById("sourceBadge");
+const sourceDetails = document.getElementById("sourceDetails");
+const reloadSourceBtn = document.getElementById("reloadSourceBtn");
+const useLocalBtn = document.getElementById("useLocalBtn");
+const jsonExport = document.getElementById("jsonExport");
+const copyJsonBtn = document.getElementById("copyJsonBtn");
 
 const size = canvas.width;
 const center = size / 2;
 const radius = 320;
 const ringRadius = 360;
 
-let buckets = loadBuckets();
+let buckets = loadLocalBuckets();
 let selectedBucket = null;
 let currentItems = [];
 let currentRotation = 0;
 let isSpinning = false;
-let currentMode = loadMode();
+let currentMode = localStorage.getItem(MODE_KEY) || "classic";
+let sourceMode = localStorage.getItem(SOURCE_KEY) || "shared";
+let sharedBucketsAvailable = false;
 
 function deepClone(obj) {
   return JSON.parse(JSON.stringify(obj));
 }
 
-function loadBuckets() {
-  const saved = localStorage.getItem(STORAGE_KEY);
-  if (!saved) return deepClone(DEFAULT_BUCKETS);
+function normalizeBuckets(raw) {
+  const out = {};
+  for (const [key, value] of Object.entries(raw || {})) {
+    out[key] = {
+      color: value?.color || (Object.keys(out).length % 2 === 0 ? "#111111" : "#b10f1d"),
+      items: Array.isArray(value?.items)
+        ? value.items.filter(Boolean).map((item) => ({
+            emoji: String(item?.emoji || "🎯"),
+            name: String(item?.name || "Untitled")
+          }))
+        : []
+    };
+  }
+  return out;
+}
+
+function loadLocalBuckets() {
   try {
-    return JSON.parse(saved);
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (!saved) return deepClone(DEFAULT_BUCKETS);
+    return normalizeBuckets(JSON.parse(saved));
   } catch {
     return deepClone(DEFAULT_BUCKETS);
   }
 }
 
-function saveBuckets() {
+function saveLocalBuckets() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(buckets));
+  updateJsonExport();
 }
 
-function loadMode() {
-  return localStorage.getItem(MODE_KEY) || "classic";
+function setSourceStatus(mode, message, badgeClass = "") {
+  sourceBadge.textContent = mode;
+  sourceBadge.className = `source-badge ${badgeClass}`.trim();
+  sourceDetails.textContent = message;
 }
 
-function saveMode() {
-  localStorage.setItem(MODE_KEY, currentMode);
+async function loadSharedBuckets() {
+  try {
+    const res = await fetch(`${SOURCE_FILE}?v=${Date.now()}`, { cache: "no-store" });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    const normalized = normalizeBuckets(data);
+    if (!Object.keys(normalized).length) throw new Error("File is empty");
+    sharedBucketsAvailable = true;
+    buckets = normalized;
+    saveLocalBuckets();
+    sourceMode = "shared";
+    localStorage.setItem(SOURCE_KEY, sourceMode);
+    setSourceStatus("Shared Live", "Loaded from activities.json. Anyone using your link will get this list.", "live");
+    refreshAllUI();
+  } catch (err) {
+    sharedBucketsAvailable = false;
+    if (sourceMode === "shared") {
+      setSourceStatus("Shared Missing", "Could not load activities.json, so the wheel is using your local copy until the file is fixed.", "error");
+    } else {
+      setSourceStatus("Local Copy", "Using your device's saved copy. Reload shared file whenever you want.", "local");
+    }
+    refreshAllUI();
+  }
+}
+
+function useLocalCopy() {
+  sourceMode = "local";
+  localStorage.setItem(SOURCE_KEY, sourceMode);
+  buckets = loadLocalBuckets();
+  setSourceStatus("Local Copy", "Using your device's saved copy. Copy JSON below into activities.json to publish changes.", "local");
+  refreshAllUI();
 }
 
 function initBulbs() {
@@ -144,12 +189,31 @@ function initBulbs() {
   });
 }
 
+function initPageBorderLights() {
+  const host = document.getElementById("pageBorderLights");
+  const bulbs = [];
+  const spacing = window.innerWidth < 700 ? 34 : 42;
+  const w = window.innerWidth - 16;
+  const h = window.innerHeight - 16;
+  const push = (x, y, delay) => bulbs.push({ x, y, delay });
+  for (let x = 0; x <= w; x += spacing) {
+    push(x, 0, bulbs.length * 0.03);
+    push(x, h, bulbs.length * 0.03);
+  }
+  for (let y = spacing; y < h; y += spacing) {
+    push(0, y, bulbs.length * 0.03);
+    push(w, y, bulbs.length * 0.03);
+  }
+  host.innerHTML = bulbs.map((b) => `<span style="left:${b.x}px;top:${b.y}px;animation-delay:${b.delay}s"></span>`).join("");
+}
+
 function initWheelLights() {
-  for (let i = 0; i < 24; i++) {
+  wheelLights.innerHTML = "";
+  for (let i = 0; i < 32; i++) {
     const bulb = document.createElement("span");
-    const angle = (i / 24) * Math.PI * 2;
-    const x = 50 + Math.cos(angle) * 49;
-    const y = 50 + Math.sin(angle) * 49;
+    const angle = (i / 32) * Math.PI * 2;
+    const x = 50 + Math.cos(angle) * 48.5;
+    const y = 50 + Math.sin(angle) * 48.5;
     bulb.style.cssText = `
       position:absolute;
       left:${x}%;
@@ -165,21 +229,16 @@ function initWheelLights() {
   }
 }
 
-function setMode(mode) {
-  currentMode = mode;
-  classicModeBtn.classList.toggle("active", mode === "classic");
-  dateNightModeBtn.classList.toggle("active", mode === "dateNight");
-  saveMode();
-
-  if (mode === "dateNight") {
-    wheelNote.textContent = selectedBucket
-      ? `${currentItems.length} activities in ${selectedBucket}. Spin also picks food and movie ideas.`
-      : "Date Night Mode adds a restaurant type and movie genre to the winning activity.";
-  } else if (selectedBucket) {
-    wheelNote.textContent = `${currentItems.length} possible activities in ${selectedBucket}`;
-  } else {
-    wheelNote.textContent = "Wheel will load after you choose a budget.";
-  }
+function shadeColor(hex, amt) {
+  const clean = hex.replace("#", "");
+  const num = parseInt(clean, 16);
+  let r = (num >> 16) + amt;
+  let g = ((num >> 8) & 255) + amt;
+  let b = (num & 255) + amt;
+  r = Math.max(0, Math.min(255, r));
+  g = Math.max(0, Math.min(255, g));
+  b = Math.max(0, Math.min(255, b));
+  return `#${((r << 16) | (g << 8) | b).toString(16).padStart(6, "0")}`;
 }
 
 function buildBucketButtons() {
@@ -195,6 +254,7 @@ function buildBucketButtons() {
 }
 
 function buildAdminBucketSelect() {
+  const previous = adminBucket.value;
   adminBucket.innerHTML = "";
   Object.keys(buckets).forEach((bucketName) => {
     const option = document.createElement("option");
@@ -202,12 +262,30 @@ function buildAdminBucketSelect() {
     option.textContent = bucketName;
     adminBucket.appendChild(option);
   });
+  if (previous && buckets[previous]) adminBucket.value = previous;
 }
 
 function setActiveBucketButton(bucketName) {
   document.querySelectorAll(".bucket-btn").forEach((btn) => {
     btn.classList.toggle("active", btn.textContent.startsWith(bucketName));
   });
+}
+
+function setMode(mode) {
+  currentMode = mode;
+  localStorage.setItem(MODE_KEY, mode);
+  classicModeBtn.classList.toggle("active", mode === "classic");
+  dateNightModeBtn.classList.toggle("active", mode === "dateNight");
+
+  if (mode === "dateNight") {
+    wheelNote.textContent = selectedBucket
+      ? `${currentItems.length} activities in ${selectedBucket}. Spin also picks food and movie ideas.`
+      : "Date Night Mode adds a restaurant type and movie genre to the winning activity.";
+  } else if (selectedBucket) {
+    wheelNote.textContent = `${currentItems.length} possible activities in ${selectedBucket}`;
+  } else {
+    wheelNote.textContent = "Wheel will load after you choose a budget.";
+  }
 }
 
 function selectBucket(bucketName) {
@@ -228,7 +306,7 @@ function selectBucket(bucketName) {
 
 function syncAdminList() {
   const bucketName = adminBucket.value || Object.keys(buckets)[0];
-  const items = buckets[bucketName].items;
+  const items = buckets[bucketName]?.items || [];
   bucketCount.textContent = `${items.length} activit${items.length === 1 ? "y" : "ies"}`;
   activityList.innerHTML = "";
 
@@ -245,7 +323,7 @@ function syncAdminList() {
     removeBtn.textContent = "Remove";
     removeBtn.addEventListener("click", () => {
       buckets[bucketName].items.splice(index, 1);
-      saveBuckets();
+      saveLocalBuckets();
       buildBucketButtons();
       syncAdminList();
       if (selectedBucket === bucketName) {
@@ -256,20 +334,23 @@ function syncAdminList() {
       }
     });
 
-    row.appendChild(text);
-    row.appendChild(removeBtn);
+    row.append(text, removeBtn);
     activityList.appendChild(row);
   });
+}
+
+function updateJsonExport() {
+  jsonExport.value = JSON.stringify(buckets, null, 2);
 }
 
 function addActivity() {
   const bucketName = adminBucket.value;
   const emoji = activityEmoji.value.trim() || "🎯";
   const name = activityName.value.trim();
-  if (!name) return;
+  if (!name || !bucketName) return;
 
   buckets[bucketName].items.push({ emoji, name });
-  saveBuckets();
+  saveLocalBuckets();
   buildBucketButtons();
   syncAdminList();
 
@@ -287,8 +368,8 @@ function addActivity() {
 
 function resetCurrentBucket() {
   if (!selectedBucket) return;
-  buckets[selectedBucket].items = deepClone(DEFAULT_BUCKETS[selectedBucket].items);
-  saveBuckets();
+  buckets[selectedBucket].items = deepClone(DEFAULT_BUCKETS[selectedBucket]?.items || []);
+  saveLocalBuckets();
   buildBucketButtons();
   syncAdminList();
   currentItems = [...buckets[selectedBucket].items];
@@ -299,16 +380,18 @@ function resetCurrentBucket() {
 
 function resetAllBuckets() {
   buckets = deepClone(DEFAULT_BUCKETS);
-  saveBuckets();
+  saveLocalBuckets();
   buildBucketButtons();
   buildAdminBucketSelect();
-  if (selectedBucket) {
+  if (selectedBucket && buckets[selectedBucket]) {
     currentItems = [...buckets[selectedBucket].items];
     adminBucket.value = selectedBucket;
     spinBtn.disabled = currentItems.length === 0;
     setMode(currentMode);
     drawWheel();
   } else {
+    selectedBucket = null;
+    currentItems = [];
     drawEmptyWheel();
   }
   syncAdminList();
@@ -335,18 +418,6 @@ function drawEmptyWheel() {
   ctx.font = "20px Arial";
   ctx.fillStyle = "#e2cfa4";
   ctx.fillText("The Vegas wheel loads your activities here", center, center + 26);
-}
-
-function shadeColor(hex, amt) {
-  const clean = hex.replace("#", "");
-  const num = parseInt(clean, 16);
-  let r = (num >> 16) + amt;
-  let g = ((num >> 8) & 255) + amt;
-  let b = (num & 255) + amt;
-  r = Math.max(0, Math.min(255, r));
-  g = Math.max(0, Math.min(255, g));
-  b = Math.max(0, Math.min(255, b));
-  return `#${((r << 16) | (g << 8) | b).toString(16).padStart(6, "0")}`;
 }
 
 function drawWheelText(text) {
@@ -388,8 +459,7 @@ function drawWheel() {
   for (let i = 0; i < currentItems.length; i++) {
     const start = currentRotation + i * slice;
     const end = start + slice;
-    const isRed = i % 2 === 0;
-    const segColor = isRed ? "#b11420" : "#111111";
+    const segColor = i % 2 === 0 ? "#b11420" : "#111111";
 
     ctx.beginPath();
     ctx.moveTo(center, center);
@@ -397,7 +467,6 @@ function drawWheel() {
     ctx.closePath();
     ctx.fillStyle = segColor;
     ctx.fill();
-
     ctx.lineWidth = 4;
     ctx.strokeStyle = "#d2a034";
     ctx.stroke();
@@ -432,20 +501,21 @@ function drawWheel() {
   ctx.fill();
 }
 
-function easeOutCubic(t) {
-  return 1 - Math.pow(1 - t, 3);
-}
+function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
+function getRandomItem(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
 
-function getRandomItem(arr) {
-  return arr[Math.floor(Math.random() * arr.length)];
+function ensureAudioContext() {
+  const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+  if (!AudioContextClass) return null;
+  if (!window.__vegasAudioCtx) window.__vegasAudioCtx = new AudioContextClass();
+  if (window.__vegasAudioCtx.state === "suspended") window.__vegasAudioCtx.resume();
+  return window.__vegasAudioCtx;
 }
 
 function playTick(durationMs = 42, freq = 900, volume = 0.022) {
   if (!soundToggle.checked) return;
-  const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-  if (!AudioContextClass) return;
-  if (!window.__vegasAudioCtx) window.__vegasAudioCtx = new AudioContextClass();
-  const ac = window.__vegasAudioCtx;
+  const ac = ensureAudioContext();
+  if (!ac) return;
   const osc = ac.createOscillator();
   const gain = ac.createGain();
   const now = ac.currentTime;
@@ -461,12 +531,9 @@ function playTick(durationMs = 42, freq = 900, volume = 0.022) {
 
 function playWinSound() {
   if (!soundToggle.checked) return;
-  const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-  if (!AudioContextClass) return;
-  if (!window.__vegasAudioCtx) window.__vegasAudioCtx = new AudioContextClass();
-  const ac = window.__vegasAudioCtx;
-  const notes = [660, 880, 1046, 1320];
-  notes.forEach((freq, i) => {
+  const ac = ensureAudioContext();
+  if (!ac) return;
+  [660, 880, 1046, 1320].forEach((freq, i) => {
     const osc = ac.createOscillator();
     const gain = ac.createGain();
     const start = ac.currentTime + i * 0.09;
@@ -489,22 +556,17 @@ function launchConfetti() {
   const confettiContainer = document.createElement("div");
   confettiContainer.style.cssText = "position:fixed;inset:0;pointer-events:none;z-index:24;overflow:hidden;";
   document.body.appendChild(confettiContainer);
-
   const timer = setInterval(() => {
     for (let i = 0; i < 24; i++) {
       const piece = document.createElement("span");
       const left = Math.random() * 100;
       const size = 6 + Math.random() * 8;
-      piece.style.cssText = `position:absolute;left:${left}%;top:-18px;width:${size}px;height:${size * 1.6}px;background:${colors[Math.floor(Math.random() * colors.length)]};transform:rotate(${Math.random() * 360}deg);opacity:1;border-radius:2px;animation:confettiDrop ${1.3 + Math.random() * 1.3}s linear forwards;`;
+      piece.style.cssText = `position:absolute;left:${left}%;top:-18px;width:${size}px;height:${size * 1.6}px;background:${colors[Math.floor(Math.random() * colors.length)]};transform:rotate(${Math.random() * 360}deg);opacity:1;border-radius:2px;`;
       confettiContainer.appendChild(piece);
       piece.animate([
         { transform: `translateY(0) rotate(0deg)` },
         { transform: `translateY(${window.innerHeight + 50}px) rotate(${260 + Math.random() * 300}deg)` }
-      ], {
-        duration: 1300 + Math.random() * 1200,
-        easing: "cubic-bezier(.2,.6,.3,1)",
-        fill: "forwards"
-      });
+      ], { duration: 1300 + Math.random() * 1200, easing: "cubic-bezier(.2,.6,.3,1)", fill: "forwards" });
       setTimeout(() => piece.remove(), 2600);
     }
     if (Date.now() > end) {
@@ -535,7 +597,6 @@ function showWinnerPopup(mainText, budgetText, extrasHtml) {
   winnerOverlay.classList.remove("hidden");
   winnerOverlay.setAttribute("aria-hidden", "false");
 }
-
 function hideWinnerPopup() {
   winnerOverlay.classList.add("hidden");
   winnerOverlay.setAttribute("aria-hidden", "true");
@@ -562,7 +623,7 @@ function spinWheel() {
   const startTime = performance.now();
   let lastTick = 0;
 
-  function animate(now) {
+  const animate = (now) => {
     const elapsed = now - startTime;
     const progress = Math.min(elapsed / duration, 1);
     const eased = easeOutCubic(progress);
@@ -584,7 +645,6 @@ function spinWheel() {
     drawWheel();
     const winningItem = currentItems[winnerIndex];
     let extras = "";
-    let mini = "";
 
     resultText.textContent = `${winningItem.emoji || "🎯"} ${winningItem.name}`;
     resultSub.textContent = `Chosen from ${selectedBucket}`;
@@ -592,10 +652,9 @@ function spinWheel() {
     if (currentMode === "dateNight") {
       const restaurant = getRandomItem(RESTAURANT_TYPES);
       const movie = getRandomItem(MOVIE_GENRES);
-      mini = `<strong>Food:</strong> ${restaurant}<br><strong>Movie:</strong> ${movie}`;
-      extras = `<div><strong>Restaurant Type:</strong> ${restaurant}</div><div><strong>Movie Genre:</strong> ${movie}</div>`;
-      dateNightMini.innerHTML = mini;
+      dateNightMini.innerHTML = `<strong>Food:</strong> ${restaurant}<br><strong>Movie:</strong> ${movie}`;
       dateNightMini.classList.remove("hidden");
+      extras = `<div><strong>Restaurant Type:</strong> ${restaurant}</div><div><strong>Movie Genre:</strong> ${movie}</div>`;
     }
 
     playWinSound();
@@ -603,7 +662,7 @@ function spinWheel() {
     launchCoins();
     showWinnerPopup(
       `${winningItem.emoji || "🎯"} ${winningItem.name}`,
-      `${selectedBucket} • ${currentMode === 'dateNight' ? 'Date Night Mode' : 'Classic Spin'}`,
+      `${selectedBucket} • ${currentMode === "dateNight" ? "Date Night Mode" : "Classic Spin"}`,
       extras
     );
 
@@ -612,7 +671,7 @@ function spinWheel() {
       const realIndex = liveItems.findIndex((item) => item.name === winningItem.name && item.emoji === winningItem.emoji);
       if (realIndex !== -1) {
         liveItems.splice(realIndex, 1);
-        saveBuckets();
+        saveLocalBuckets();
         buildBucketButtons();
         syncAdminList();
       }
@@ -622,19 +681,49 @@ function spinWheel() {
     spinBtn.disabled = currentItems.length === 0;
     setMode(currentMode);
     isSpinning = false;
-  }
+  };
 
   requestAnimationFrame(animate);
 }
 
-function init() {
-  initBulbs();
-  initWheelLights();
+function refreshAllUI() {
   buildBucketButtons();
   buildAdminBucketSelect();
+  updateJsonExport();
+
+  const bucketNames = Object.keys(buckets);
+  if (!bucketNames.length) {
+    selectedBucket = null;
+    currentItems = [];
+    drawEmptyWheel();
+    syncAdminList();
+    return;
+  }
+
+  if (!selectedBucket || !buckets[selectedBucket]) {
+    selectedBucket = bucketNames[0];
+  }
+
+  adminBucket.value = selectedBucket;
+  currentItems = [...buckets[selectedBucket].items];
+  setActiveBucketButton(selectedBucket);
+  spinBtn.disabled = currentItems.length === 0;
   syncAdminList();
   setMode(currentMode);
-  drawEmptyWheel();
+  drawWheel();
+}
+
+async function init() {
+  initBulbs();
+  initWheelLights();
+  initPageBorderLights();
+  refreshAllUI();
+  if (sourceMode === "shared") {
+    setSourceStatus("Loading...", "Checking shared data file...");
+    await loadSharedBuckets();
+  } else {
+    setSourceStatus("Local Copy", "Using your device's saved copy. Copy JSON below into activities.json to publish changes.", "local");
+  }
 }
 
 classicModeBtn.addEventListener("click", () => setMode("classic"));
@@ -643,20 +732,26 @@ addActivityBtn.addEventListener("click", addActivity);
 spinBtn.addEventListener("click", spinWheel);
 resetBucketBtn.addEventListener("click", resetCurrentBucket);
 resetAllBtn.addEventListener("click", resetAllBuckets);
-spinAgainBtn.addEventListener("click", () => {
-  hideWinnerPopup();
-  spinWheel();
-});
+spinAgainBtn.addEventListener("click", () => { hideWinnerPopup(); spinWheel(); });
 closeWinnerBtn.addEventListener("click", hideWinnerPopup);
-winnerOverlay.addEventListener("click", (e) => {
-  if (e.target === winnerOverlay) hideWinnerPopup();
-});
+winnerOverlay.addEventListener("click", (e) => { if (e.target === winnerOverlay) hideWinnerPopup(); });
 adminBucket.addEventListener("change", syncAdminList);
-activityName.addEventListener("keydown", (e) => {
-  if (e.key === "Enter") addActivity();
+activityName.addEventListener("keydown", (e) => { if (e.key === "Enter") addActivity(); });
+document.addEventListener("keydown", (e) => { if (e.key === "Escape") hideWinnerPopup(); });
+reloadSourceBtn.addEventListener("click", async () => { sourceMode = "shared"; localStorage.setItem(SOURCE_KEY, sourceMode); await loadSharedBuckets(); });
+useLocalBtn.addEventListener("click", useLocalCopy);
+copyJsonBtn.addEventListener("click", async () => {
+  try {
+    await navigator.clipboard.writeText(jsonExport.value);
+    copyJsonBtn.textContent = "Copied";
+    setTimeout(() => { copyJsonBtn.textContent = "Copy JSON"; }, 1200);
+  } catch {
+    jsonExport.select();
+    document.execCommand("copy");
+    copyJsonBtn.textContent = "Copied";
+    setTimeout(() => { copyJsonBtn.textContent = "Copy JSON"; }, 1200);
+  }
 });
-document.addEventListener("keydown", (e) => {
-  if (e.key === "Escape") hideWinnerPopup();
-});
+window.addEventListener("resize", initPageBorderLights);
 
 init();
