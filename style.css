@@ -40,7 +40,7 @@ body{background:#050505;color:var(--cream);font-family:Georgia,serif;overflow:hi
 
 .wheel-zone{position:absolute;left:39.35%;top:58.55%;width:21.2%;aspect-ratio:1 / 1;z-index:5}
 .pointer{position:absolute;left:50%;top:-1.6%;transform:translateX(-50%);width:0;height:0;border-left:10px solid transparent;border-right:10px solid transparent;border-top:22px solid var(--gold);z-index:8;filter:drop-shadow(0 0 6px rgba(255,220,140,.42))}
-#rotor{position:absolute;inset:0;width:100%;height:100%;display:block;object-fit:contain;transform-origin:50% 50%;filter:drop-shadow(0 10px 12px rgba(0,0,0,.28))}
+#rotor{position:absolute;inset:0;width:100%;height:100%;display:block;object-fit:contain;transform-origin:50% 50%;filter:drop-shadow(0 10px 12px rgba(0,0,0,.28));user-select:none;-webkit-user-drag:none}
 #ball{position:absolute;width:2.6%;aspect-ratio:1 / 1;border-radius:50%;background:radial-gradient(circle at 35% 35%,#fff,#dadada 55%,#888 100%);box-shadow:0 0 10px rgba(255,255,255,.28);z-index:9;left:50%;top:50%;transform:translate(-50%,-50%);opacity:.92}
 
 .add-page{min-height:100vh;background:radial-gradient(circle at top,#2a1807 0%,#090909 45%,#040404 100%)}
