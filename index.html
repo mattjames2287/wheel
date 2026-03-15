@@ -1,65 +1,80 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Bari Date Night Wheel - Wheel of Things To Do</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bari Date Night Wheel - Wheel of Things To Do</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body class="floor-page">
+  <div class="bg-image"></div>
+  <div class="bg-overlay"></div>
+  <div class="ambient ambient-left"></div>
+  <div class="ambient ambient-right"></div>
+  <div class="ambient ambient-center"></div>
 
-<div class="casino-bg"></div>
-<div class="casino-overlay"></div>
+  <header class="page-header">
+    <div class="brand-kicker">BARI DATE NIGHT WHEEL</div>
+    <h1>Bari Date Night Wheel - Wheel of Things To Do</h1>
+    <p>Spin for something fun, or use Surprise Night to pick the activity, restaurant, and movie vibe.</p>
+    <div class="header-actions">
+      <a class="btn ghost" href="add.html">Add Activity</a>
+    </div>
+  </header>
 
-<header class="topbar">
-<div>
-<div class="eyebrow">BARI DATE NIGHT WHEEL</div>
-<h1>Bari Date Night Wheel - Wheel of Things To Do</h1>
-<p class="top-sub">Spin the wheel and let the casino decide the night.</p>
-</div>
-<div class="top-actions">
-<a class="mini-btn" href="add.html">Add Activity</a>
-</div>
-</header>
+  <section class="controls-wrap">
+    <div class="controls-panel">
+      <label for="bucket">Budget</label>
+      <select id="bucket">
+        <option value="all">All</option>
+        <option value="0-25">$0-25</option>
+        <option value="25-50">$25-50</option>
+        <option value="50-100">$50-100</option>
+        <option value="100+">$100+</option>
+      </select>
 
-<div class="casino-sign">
-<div class="sign-label">WHEEL RESULT</div>
-<div id="screenMain" class="sign-main">Ready</div>
-<div id="screenSub" class="sign-sub">Choose a budget and spin</div>
-</div>
+      <div class="button-row">
+        <button class="btn gold" id="spin" type="button">Spin</button>
+        <button class="btn dark" id="surprise" type="button">Surprise Night</button>
+        <button class="btn dark" id="reloadData" type="button">Reload</button>
+      </div>
+    </div>
+  </section>
 
-<div class="casino-badge">
-<div class="badge-label">WINNING PICK</div>
-<div id="winnerBadgeMain" class="badge-main">--</div>
-<div id="winnerBadgeSub" class="badge-sub">Waiting</div>
-</div>
+  <section class="sign-screen">
+    <div class="screen-label">WHEEL RESULT</div>
+    <div id="screenMain" class="screen-main">READY</div>
+    <div id="screenSub" class="screen-sub">Pick a budget and press Spin.</div>
+  </section>
 
-<main class="table-scene">
-<section class="table-felt">
+  <section class="winning-number">
+    <div class="winning-label">WINNING PICK</div>
+    <div id="winnerBadgeMain" class="winner-badge-main">--</div>
+    <div id="winnerBadgeSub" class="winner-badge-sub">Waiting</div>
+  </section>
 
-<aside class="controls">
-<label class="label">Budget</label>
-<select id="bucket">
-<option value="all">All</option>
-<option value="0-25">$0-25</option>
-<option value="25-50">$25-50</option>
-<option value="50-100">$50-100</option>
-<option value="100+">$100+</option>
-</select>
+  <section class="wheel-stage">
+    <div class="wheel-ring">
+      <div class="pointer"></div>
+      <canvas id="wheel" width="760" height="760"></canvas>
+      <div class="wheel-center">PLAY</div>
+    </div>
+  </section>
 
-<button id="spin" class="gold-btn">Spin</button>
-<button id="surprise" class="dark-btn">Surprise Night</button>
+  <div id="winnerOverlay" class="overlay hidden">
+    <div class="overlay-card">
+      <div class="overlay-kicker">Tonight's Pick</div>
+      <div id="winnerText" class="overlay-main"></div>
+      <div id="winnerSub" class="overlay-sub"></div>
+      <div class="overlay-actions">
+        <button class="btn gold" id="spinAgain" type="button">Spin Again</button>
+        <button class="btn dark" id="closeWinner" type="button">Close</button>
+      </div>
+    </div>
+  </div>
 
-<div id="result" class="result-box">Choose a budget and spin.</div>
-</aside>
+  <div id="confettiLayer"></div>
 
-<section class="wheel-area">
-<div class="pointer"></div>
-<canvas id="wheel" width="720" height="720"></canvas>
-</section>
-
-</section>
-</main>
-
-<script src="app.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>

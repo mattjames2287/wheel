@@ -1,19 +1,73 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Add Activity</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <title>Add Activity</title>
+  <link rel="stylesheet" href="style.css">
 </head>
-<body>
-<h2>Add Activity</h2>
-<input id="emoji" placeholder="emoji"><br>
-<input id="activity" placeholder="activity"><br>
-<button onclick="add()">Add</button>
+<body class="floor-page add-page">
+  <div class="bg-image"></div>
+  <div class="bg-overlay"></div>
 
-<script>
-function add(){
-alert("Hook this to Apps Script later.");
-}
-</script>
+  <header class="page-header">
+    <div class="brand-kicker">BARI DATE NIGHT WHEEL</div>
+    <h1>Add Activity</h1>
+    <p>Adds to your shared wheel list.</p>
+    <div class="header-actions">
+      <a class="btn ghost" href="index.html">Back to Wheel</a>
+    </div>
+  </header>
+
+  <section class="form-wrap">
+    <div class="controls-panel">
+      <label>Emoji</label>
+      <input id="emoji" class="form-input" placeholder="🎳">
+      <label style="margin-top:10px;display:block;">Activity</label>
+      <input id="activity" class="form-input" placeholder="Bowling Night">
+      <label style="margin-top:10px;display:block;">Budget</label>
+      <select id="price">
+        <option value="0-25">$0-25</option>
+        <option value="25-50">$25-50</option>
+        <option value="50-100">$50-100</option>
+        <option value="100+">$100+</option>
+      </select>
+      <label style="margin-top:10px;display:block;">Restaurant Type</label>
+      <input id="restaurant" class="form-input" placeholder="Italian">
+      <label style="margin-top:10px;display:block;">Movie Genre</label>
+      <input id="movie" class="form-input" placeholder="Comedy">
+      <div class="button-row">
+        <button id="submitBtn" class="btn gold" type="button">Add Activity</button>
+      </div>
+    </div>
+    <div id="formStatus" class="status-box">Ready.</div>
+  </section>
+
+  <script>
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbztoxKIHtLnHcZmNiL7HyMU6r8k4ze5caW4q2tc7vHk_-XvHvyYc-QtFKV2v6xCCpyK/exec";
+    const statusBox = document.getElementById("formStatus");
+    document.getElementById("submitBtn").addEventListener("click", async () => {
+      statusBox.textContent = "Submitting...";
+      const data = {
+        emoji: document.getElementById("emoji").value.trim(),
+        activity: document.getElementById("activity").value.trim(),
+        price: document.getElementById("price").value,
+        restaurant: document.getElementById("restaurant").value.trim(),
+        movie: document.getElementById("movie").value.trim()
+      };
+      try {
+        const res = await fetch(SCRIPT_URL, {
+          method: "POST",
+          headers: {"Content-Type":"text/plain;charset=utf-8"},
+          body: JSON.stringify(data)
+        });
+        const text = await res.text();
+        let parsed;
+        try { parsed = JSON.parse(text); } catch { parsed = {ok:false,error:text}; }
+        statusBox.textContent = parsed.ok ? "Activity added successfully." : "Error: " + (parsed.error || "Unknown error");
+      } catch(err) {
+        statusBox.textContent = "Request failed: " + err;
+      }
+    });
+  </script>
 </body>
 </html>
