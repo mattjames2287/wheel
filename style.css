@@ -84,3 +84,108 @@ body{background:#050505;color:var(--cream);font-family:Georgia,serif;overflow:hi
   .title-block h1{font-size:30px}
   .controls-panel{left:12px;right:12px;width:auto;bottom:12px}
 }
+
+
+.bowl-shimmer{
+  position:absolute;
+  left:30.8%;
+  top:60.6%;
+  width:38.6%;
+  height:24%;
+  z-index:3;
+  pointer-events:none;
+  background:
+    linear-gradient(105deg,
+      rgba(255,255,255,0) 0%,
+      rgba(255,220,150,.02) 28%,
+      rgba(255,220,150,.16) 36%,
+      rgba(255,255,255,.03) 42%,
+      rgba(255,255,255,0) 50%);
+  mix-blend-mode:screen;
+  filter:blur(3px);
+  animation:bowlSweep 6.5s ease-in-out infinite;
+}
+
+@keyframes bowlSweep{
+  0%{transform:translateX(-18%) rotate(-8deg);opacity:.12}
+  18%{opacity:.2}
+  50%{transform:translateX(18%) rotate(-6deg);opacity:.28}
+  82%{opacity:.16}
+  100%{transform:translateX(-18%) rotate(-8deg);opacity:.12}
+}
+
+.ring-shimmer{
+  position:absolute;
+  left:33.5%;
+  top:69%;
+  width:32.8%;
+  height:11.2%;
+  z-index:4;
+  pointer-events:none;
+  border-radius:50%;
+  background:
+    conic-gradient(from 0deg,
+      rgba(255,220,150,0) 0deg 290deg,
+      rgba(255,220,150,.0) 290deg 300deg,
+      rgba(255,236,190,.38) 300deg 312deg,
+      rgba(255,220,150,.14) 312deg 320deg,
+      rgba(255,220,150,0) 320deg 360deg);
+  mix-blend-mode:screen;
+  filter:blur(2px);
+  mask:radial-gradient(ellipse at center, transparent 0 57%, #000 60% 72%, transparent 75% 100%);
+  -webkit-mask:radial-gradient(ellipse at center, transparent 0 57%, #000 60% 72%, transparent 75% 100%);
+  animation:ringSweep 3.8s linear infinite;
+}
+
+@keyframes ringSweep{
+  from{transform:rotate(0deg) scaleY(.48)}
+  to{transform:rotate(360deg) scaleY(.48)}
+}
+
+.chip-flicker{
+  position:absolute;
+  z-index:3;
+  pointer-events:none;
+  border-radius:50%;
+  filter:blur(14px);
+  mix-blend-mode:screen;
+  animation:chipGlow 2.6s ease-in-out infinite;
+}
+.chip-left{
+  left:15.8%;
+  top:66.6%;
+  width:6.2%;
+  height:4.6%;
+  background:radial-gradient(circle, rgba(255,196,104,.26), rgba(255,196,104,0));
+}
+.chip-right{
+  right:16.4%;
+  top:66.4%;
+  width:7%;
+  height:4.8%;
+  background:radial-gradient(circle, rgba(120,190,255,.18), rgba(120,190,255,0));
+  animation-delay:1.1s;
+}
+
+@keyframes chipGlow{
+  0%,100%{opacity:.12; transform:scale(.94)}
+  50%{opacity:.32; transform:scale(1.08)}
+}
+
+.table-glow{
+  position:absolute;
+  left:24%;
+  right:24%;
+  bottom:8.2%;
+  height:7%;
+  z-index:2;
+  pointer-events:none;
+  background:radial-gradient(ellipse at center, rgba(255,170,70,.16), rgba(255,170,70,0) 65%);
+  filter:blur(12px);
+  animation:tablePulse 5.5s ease-in-out infinite;
+}
+
+@keyframes tablePulse{
+  0%,100%{opacity:.14}
+  50%{opacity:.26}
+}
