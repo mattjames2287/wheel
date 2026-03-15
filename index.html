@@ -5,23 +5,33 @@
 <title>Bari Date Night Wheel - Wheel of Things To Do</title>
 <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="floor-page">
 
-<div class="casino-room">
-<div class="vignette"></div>
-<div class="ceiling-glow"></div>
-</div>
+<div class="casino-bg"></div>
+<div class="casino-overlay"></div>
 
 <header class="topbar">
 <div>
 <div class="eyebrow">BARI DATE NIGHT WHEEL</div>
 <h1>Bari Date Night Wheel - Wheel of Things To Do</h1>
-<p class="top-sub">A casino-style wheel for picking what to do next.</p>
+<p class="top-sub">Spin the wheel and let the casino decide the night.</p>
 </div>
 <div class="top-actions">
 <a class="mini-btn" href="add.html">Add Activity</a>
 </div>
 </header>
+
+<div class="casino-sign">
+<div class="sign-label">WHEEL RESULT</div>
+<div id="screenMain" class="sign-main">Ready</div>
+<div id="screenSub" class="sign-sub">Choose a budget and spin</div>
+</div>
+
+<div class="casino-badge">
+<div class="badge-label">WINNING PICK</div>
+<div id="winnerBadgeMain" class="badge-main">--</div>
+<div id="winnerBadgeSub" class="badge-sub">Waiting</div>
+</div>
 
 <main class="table-scene">
 <section class="table-felt">
@@ -48,7 +58,6 @@
 </section>
 
 </section>
-<div class="table-rail"></div>
 </main>
 
 <script src="app.js"></script>
