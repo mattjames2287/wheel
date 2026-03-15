@@ -23,14 +23,12 @@ body{background:#050505;color:var(--cream);font-family:Georgia,serif;overflow:hi
   position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background-color:#000;
 }
 .scene-div{z-index:0}
-.scene-bg{background:url("casino-floor1.jpg") center center/cover no-repeat; z-index:-1}
+.scene-bg{background:url("casino-floor1.jpg") center center/cover no-repeat; z-index:-0}
 
 .scene-vignette{
   position:absolute;
   inset:0;
-  background:linear-gradient(to bottom,rgba(0,0,0,.02),rgba(0,0,0,.08) 36%,rgba(0,0,0,.12));
-  z-index:1;
-  pointer-events:none;
+  background:rgba(0,0,0,.05);
 }
 
 .scene-light{position:absolute;border-radius:50%;filter:blur(34px);pointer-events:none;z-index:2;animation:lightPulse 8s ease-in-out infinite}
