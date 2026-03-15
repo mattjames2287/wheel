@@ -17,9 +17,7 @@
     </header>
 
     <section class="add-card">
-      <label>Emoji</label>
-      <input id="emoji" class="form-input" placeholder="🎳">
-      <label style="margin-top:10px;display:block;">Activity</label>
+      <label>Activity</label>
       <input id="activity" class="form-input" placeholder="Bowling Night">
       <label style="margin-top:10px;display:block;">Budget</label>
       <select id="price">
@@ -45,7 +43,6 @@
     document.getElementById("submitBtn").addEventListener("click", async () => {
       statusBox.textContent = "Submitting...";
       const data = {
-        emoji: document.getElementById("emoji").value.trim(),
         activity: document.getElementById("activity").value.trim(),
         price: document.getElementById("price").value,
         restaurant: document.getElementById("restaurant").value.trim(),

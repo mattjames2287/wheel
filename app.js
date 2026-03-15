@@ -9,16 +9,9 @@ const screenSub = document.getElementById("screenSub");
 let activities = [];
 let isSpinning = false;
 let refreshTimer = null;
-let tickAudio = null;
-
-function playTick() {
-  if (!tickAudio) {
-    tickAudio = new Audio("tick.mp3");
-    tickAudio.volume = 0.72;
-  }
-  tickAudio.currentTime = 0;
-  tickAudio.play().catch(() => {});
-}
+let ambientAudio = null;
+let spinAudio = null;
+let audioUnlocked = false;
 
 function safeText(v) {
   return (v || "").toString().trim();
@@ -27,6 +20,52 @@ function safeText(v) {
 function setDisplay(main, sub) {
   if (screenMain) screenMain.textContent = main;
   if (screenSub) screenSub.textContent = sub || "";
+}
+
+function ensureAudio() {
+  if (!ambientAudio) {
+    ambientAudio = new Audio("casino.mp3");
+    ambientAudio.loop = true;
+    ambientAudio.volume = 0.26;
+  }
+  if (!spinAudio) {
+    spinAudio = new Audio("tick.mp3");
+    spinAudio.volume = 0.65;
+  }
+}
+
+function unlockAudio() {
+  ensureAudio();
+  if (audioUnlocked) return;
+  audioUnlocked = true;
+  ambientAudio.play().then(() => {
+    ambientAudio.pause();
+    ambientAudio.currentTime = 0;
+  }).catch(() => {});
+  spinAudio.play().then(() => {
+    spinAudio.pause();
+    spinAudio.currentTime = 0;
+  }).catch(() => {});
+}
+
+function startAmbient() {
+  ensureAudio();
+  ambientAudio.play().catch(() => {});
+}
+
+function playSpinSound(duration = 3600) {
+  ensureAudio();
+  let elapsed = 0;
+  let interval = 42;
+  function tick() {
+    if (elapsed >= duration - 60) return;
+    spinAudio.currentTime = 0;
+    spinAudio.play().catch(() => {});
+    elapsed += interval;
+    interval = Math.min(interval + 6, 145);
+    setTimeout(tick, interval);
+  }
+  tick();
 }
 
 function jsonpLoadActivities() {
@@ -56,7 +95,6 @@ async function loadActivities() {
   try {
     const items = await jsonpLoadActivities();
     activities = items.map(item => ({
-      emoji: safeText(item.emoji),
       activity: safeText(item.activity),
       price: safeText(item.price),
       restaurant: safeText(item.restaurant),
@@ -86,53 +124,44 @@ function chooseRandomItem(items) {
   return items.length ? items[Math.floor(Math.random() * items.length)] : null;
 }
 
-function playTicking(duration = 3600) {
-  let elapsed = 0;
-  let interval = 70;
-  function nextTick() {
-    if (elapsed >= duration - 80) return;
-    playTick();
-    elapsed += interval;
-    interval = Math.min(interval + 12, 260);
-    setTimeout(nextTick, interval);
-  }
-  nextTick();
-}
-
 function runClassicSpin() {
+  unlockAudio();
+  startAmbient();
   const items = filteredActivities();
   if (!items.length) return setDisplay("NO PICKS", "NO ACTIVITIES IN THIS BUDGET");
   const winner = items[Math.floor(Math.random() * items.length)];
   isSpinning = true;
-  setDisplay("SPINNING", "CASINO FLOOR IN MOTION");
-  playTicking();
+  setDisplay("SPINNING", "ROULETTE WHEEL IN MOTION");
+  playSpinSound();
   setTimeout(() => {
     isSpinning = false;
-    setDisplay((safeText(winner.emoji) + " " + safeText(winner.activity)).trim(), "CLASSIC SPIN RESULT");
+    setDisplay(safeText(winner.activity).trim(), "CLASSIC SPIN RESULT");
   }, 3600);
 }
 
 function runSurpriseNight() {
+  unlockAudio();
+  startAmbient();
   const items = filteredActivities();
   if (!items.length) return setDisplay("NO PICKS", "NO ACTIVITIES IN THIS BUDGET");
   const activityWinner = items[Math.floor(Math.random() * items.length)];
   const restaurantWinner = chooseRandomItem(items.filter(i => safeText(i.restaurant)));
   const movieWinner = chooseRandomItem(items.filter(i => safeText(i.movie)));
   isSpinning = true;
-  setDisplay("SPINNING", "CASINO FLOOR IN MOTION");
-  playTicking();
+  setDisplay("SPINNING", "ROULETTE WHEEL IN MOTION");
+  playSpinSound(3900);
   setTimeout(() => {
     isSpinning = false;
-    const title = (safeText(activityWinner.emoji) + " " + safeText(activityWinner.activity)).trim();
     const restaurant = restaurantWinner ? safeText(restaurantWinner.restaurant) : "CHEF'S CHOICE";
     const movie = movieWinner ? safeText(movieWinner.movie) : "SURPRISE PICK";
-    setDisplay(title, "RESTAURANT: " + restaurant + " • MOVIE: " + movie);
-  }, 3600);
+    setDisplay(safeText(activityWinner.activity).trim(), "RESTAURANT: " + restaurant + " • MOVIE: " + movie);
+  }, 3900);
 }
 
+document.addEventListener("pointerdown", unlockAudio, { once:true });
 if (spinBtn) spinBtn.addEventListener("click", runClassicSpin);
 if (surpriseBtn) surpriseBtn.addEventListener("click", runSurpriseNight);
-if (reloadBtn) reloadBtn.addEventListener("click", loadActivities);
+if (reloadBtn) reloadBtn.addEventListener("click", () => { unlockAudio(); startAmbient(); loadActivities(); });
 
 loadActivities();
 startAutoRefresh();
