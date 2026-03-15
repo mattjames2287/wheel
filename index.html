@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,33 +8,59 @@
 </head>
 <body>
 
-<div class="casino-room">
+<div class="casino-room"></div>
 
-<div class="table">
-<h1 class="title">🎰 Vegas Date Night Roulette 🎰</h1>
+<header class="topbar">
+  <h1>Vegas Date Night Roulette</h1>
+  <div class="top-actions">
+    <a class="mini-btn" href="add.html">Add Activity</a>
+    <button id="musicToggle" class="mini-btn">Music</button>
+  </div>
+</header>
 
-<canvas id="wheel" width="500" height="500"></canvas>
+<main class="table-area">
 
 <div class="controls">
-<select id="bucket">
-<option value="all">All Activities</option>
-<option value="0-25">$0-25</option>
-<option value="25-50">$25-50</option>
-<option value="50-100">$50-100</option>
-<option value="100+">$100+</option>
-</select>
+  <label>Budget</label>
+  <select id="bucket">
+    <option value="all">All</option>
+    <option value="0-25">$0‑25</option>
+    <option value="25-50">$25‑50</option>
+    <option value="50-100">$50‑100</option>
+    <option value="100+">$100+</option>
+  </select>
 
-<button id="spin">SPIN</button>
-<button id="dateNight">DATE NIGHT MODE</button>
+  <button id="spin" class="gold-btn">Spin</button>
+  <button id="dateNight" class="dark-btn">Date Night</button>
+  <button id="reloadData" class="dark-btn">Reload</button>
+
+  <div class="meta">
+    <div><span id="activityCount">0</span> activities</div>
+    <div id="lastUpdated">waiting...</div>
+  </div>
+
+  <div id="result" class="result-box">Choose a budget and spin.</div>
 </div>
 
-<div id="result"></div>
-
+<div class="wheel-area">
+  <div class="pointer"></div>
+  <canvas id="wheel" width="720" height="720"></canvas>
 </div>
 
-<div class="slot-machines"></div>
+</main>
 
+<div id="winnerOverlay" class="overlay hidden">
+  <div class="winner-card">
+    <h2 id="winnerText"></h2>
+    <p id="winnerSub"></p>
+
+    <button id="spinAgain" class="gold-btn">Spin Again</button>
+    <button id="closeWinner" class="dark-btn">Close</button>
+  </div>
 </div>
+
+<div id="confettiLayer"></div>
+<div id="coinLayer"></div>
 
 <script src="app.js"></script>
 </body>
