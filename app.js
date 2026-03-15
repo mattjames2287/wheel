@@ -1,5 +1,5 @@
 const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbztoxKIHtLnHcZmNiL7HyMU6r8k4ze5caW4q2tc7vHk_-XvHvyYc-QtFKV2v6xCCpyK/exec";
-const rotor = document.getElementById("rotor");
+const bowlRing = document.getElementById("bowlRing");
 const spinBtn = document.getElementById("spin");
 const surpriseBtn = document.getElementById("surprise");
 const reloadBtn = document.getElementById("reloadData");
@@ -96,9 +96,10 @@ function easeOutCubic(t) {
 function positionBall(progress) {
   if (!ball) return;
   const angle = (-Math.PI / 2) + (progress * Math.PI * 2 * 6.2);
-  const r = 46;
-  const x = 50 + Math.cos(angle) * r;
-  const y = 50 + Math.sin(angle) * r;
+  const rx = 28.5;
+  const ry = 42;
+  const x = 50 + Math.cos(angle) * rx;
+  const y = 50 + Math.sin(angle) * ry;
   ball.style.left = x + "%";
   ball.style.top = y + "%";
 }
@@ -133,12 +134,12 @@ function spinToIndex(index, total, callback) {
     const progress = Math.min((now - startTime) / duration, 1);
     const eased = easeOutCubic(progress);
     currentRotation = startDeg + endDeg * eased;
-    if (rotor) rotor.style.transform = "rotate(" + currentRotation + "deg)";
+    if (bowlRing) bowlRing.style.transform = "translate(-50%,-50%) rotate(" + currentRotation + "deg)";
     positionBall(progress);
     if (progress < 1) requestAnimationFrame(frame);
     else {
       currentRotation = currentRotation % 360;
-      if (rotor) rotor.style.transform = "rotate(" + currentRotation + "deg)";
+      if (bowlRing) bowlRing.style.transform = "translate(-50%,-50%) rotate(" + currentRotation + "deg)";
       positionBall(1);
       isSpinning = false;
       callback && callback();
