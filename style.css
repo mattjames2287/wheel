@@ -8,9 +8,22 @@
 *{box-sizing:border-box}
 html,body{margin:0;height:100%}
 body{background:#050505;color:var(--cream);font-family:Georgia,serif;overflow:hidden}
-.page{width:100vw;height:100vh;background:#000}
-.scene{position:relative;width:100vw;height:100vh;overflow:hidden}
-.scene-bg{position:absolute;inset:0;background:url("casino-floor1.jpg") center center/cover no-repeat;z-index:0}
+.viewport{
+  width:100vw;
+  height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#000;
+}
+.scene{
+  position:relative;
+  width:min(100vw, calc(100vh * 2.023715415));
+  aspect-ratio:2048 / 1012;
+  overflow:hidden;
+  background:#000;
+}
+.scene-bg{position:absolute;inset:0;background:url("casino-floor1.jpg") center center/contain no-repeat;background-color:#000;z-index:0}
 .scene-vignette{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.04),rgba(0,0,0,.14) 36%,rgba(0,0,0,.28)),radial-gradient(circle at 50% 15%,rgba(255,230,170,.06),transparent 18%);z-index:1}
 .scene-light{position:absolute;border-radius:50%;filter:blur(34px);pointer-events:none;z-index:2;animation:lightPulse 8s ease-in-out infinite}
 .light-a{width:18%;height:24%;left:11%;top:20%;background:radial-gradient(circle,rgba(255,166,70,.24),rgba(255,166,70,0))}
@@ -34,12 +47,12 @@ body{background:#050505;color:var(--cream);font-family:Georgia,serif;overflow:hi
 
 .screen-panel{
   position:absolute;
-  left:42.9%;
-  top:5.1%;
-  width:14.6%;
-  height:52.6%;
+  left:41.55%;
+  top:5.73%;
+  width:17.58%;
+  height:49.90%;
   z-index:6;
-  pointer-events:none
+  pointer-events:none;
 }
 .screen-inner{
   position:absolute;inset:0;
@@ -57,78 +70,83 @@ body{background:#050505;color:var(--cream);font-family:Georgia,serif;overflow:hi
 
 .wheel-zone{
   position:absolute;
-  left:30.3%;
-  top:66.6%;
-  width:38.5%;
-  height:19.8%;
+  left:31.6%;
+  top:67.1%;
+  width:37.0%;
+  height:15.4%;
   z-index:5;
+  pointer-events:none;
 }
-.pointer{position:absolute;left:50%;top:-15%;transform:translateX(-50%);width:0;height:0;border-left:10px solid transparent;border-right:10px solid transparent;border-top:22px solid var(--gold);z-index:8;filter:drop-shadow(0 0 6px rgba(255,220,140,.42))}
+.pointer{
+  position:absolute;left:50%;top:-18%;
+  transform:translateX(-50%);
+  width:0;height:0;
+  border-left:10px solid transparent;border-right:10px solid transparent;border-top:22px solid var(--gold);
+  z-index:8;filter:drop-shadow(0 0 6px rgba(255,220,140,.42))
+}
 #bowlRing{
   position:absolute;
   left:50%;
   top:50%;
-  width:58%;
-  height:100%;
-  transform:translate(-50%,-50%) scaleY(.42);
+  width:70%;
+  height:78%;
+  transform:translate(-50%,-50%) scaleY(.36);
   transform-origin:center center;
   border-radius:50%;
   background:
     conic-gradient(from 0deg,
-      rgba(160,15,20,.88) 0deg 11deg,
-      rgba(16,20,22,.92) 11deg 22deg,
-      rgba(20,110,72,.84) 22deg 28deg,
-      rgba(160,15,20,.88) 28deg 39deg,
-      rgba(16,20,22,.92) 39deg 50deg,
-      rgba(20,110,72,.84) 50deg 56deg,
-      rgba(160,15,20,.88) 56deg 67deg,
-      rgba(16,20,22,.92) 67deg 78deg,
-      rgba(20,110,72,.84) 78deg 84deg,
-      rgba(160,15,20,.88) 84deg 95deg,
-      rgba(16,20,22,.92) 95deg 106deg,
-      rgba(20,110,72,.84) 106deg 112deg,
-      rgba(160,15,20,.88) 112deg 123deg,
-      rgba(16,20,22,.92) 123deg 134deg,
-      rgba(20,110,72,.84) 134deg 140deg,
-      rgba(160,15,20,.88) 140deg 151deg,
-      rgba(16,20,22,.92) 151deg 162deg,
-      rgba(20,110,72,.84) 162deg 168deg,
-      rgba(160,15,20,.88) 168deg 179deg,
-      rgba(16,20,22,.92) 179deg 190deg,
-      rgba(20,110,72,.84) 190deg 196deg,
-      rgba(160,15,20,.88) 196deg 207deg,
-      rgba(16,20,22,.92) 207deg 218deg,
-      rgba(20,110,72,.84) 218deg 224deg,
-      rgba(160,15,20,.88) 224deg 235deg,
-      rgba(16,20,22,.92) 235deg 246deg,
-      rgba(20,110,72,.84) 246deg 252deg,
-      rgba(160,15,20,.88) 252deg 263deg,
-      rgba(16,20,22,.92) 263deg 274deg,
-      rgba(20,110,72,.84) 274deg 280deg,
-      rgba(160,15,20,.88) 280deg 291deg,
-      rgba(16,20,22,.92) 291deg 302deg,
-      rgba(20,110,72,.84) 302deg 308deg,
-      rgba(160,15,20,.88) 308deg 319deg,
-      rgba(16,20,22,.92) 319deg 330deg,
-      rgba(20,110,72,.84) 330deg 336deg,
-      rgba(160,15,20,.88) 336deg 347deg,
-      rgba(16,20,22,.92) 347deg 360deg);
-  opacity:.65;
+      rgba(160,15,20,.42) 0deg 11deg,
+      rgba(16,20,22,.48) 11deg 22deg,
+      rgba(20,110,72,.36) 22deg 28deg,
+      rgba(160,15,20,.42) 28deg 39deg,
+      rgba(16,20,22,.48) 39deg 50deg,
+      rgba(20,110,72,.36) 50deg 56deg,
+      rgba(160,15,20,.42) 56deg 67deg,
+      rgba(16,20,22,.48) 67deg 78deg,
+      rgba(20,110,72,.36) 78deg 84deg,
+      rgba(160,15,20,.42) 84deg 95deg,
+      rgba(16,20,22,.48) 95deg 106deg,
+      rgba(20,110,72,.36) 106deg 112deg,
+      rgba(160,15,20,.42) 112deg 123deg,
+      rgba(16,20,22,.48) 123deg 134deg,
+      rgba(20,110,72,.36) 134deg 140deg,
+      rgba(160,15,20,.42) 140deg 151deg,
+      rgba(16,20,22,.48) 151deg 162deg,
+      rgba(20,110,72,.36) 162deg 168deg,
+      rgba(160,15,20,.42) 168deg 179deg,
+      rgba(16,20,22,.48) 179deg 190deg,
+      rgba(20,110,72,.36) 190deg 196deg,
+      rgba(160,15,20,.42) 196deg 207deg,
+      rgba(16,20,22,.48) 207deg 218deg,
+      rgba(20,110,72,.36) 218deg 224deg,
+      rgba(160,15,20,.42) 224deg 235deg,
+      rgba(16,20,22,.48) 235deg 246deg,
+      rgba(20,110,72,.36) 246deg 252deg,
+      rgba(160,15,20,.42) 252deg 263deg,
+      rgba(16,20,22,.48) 263deg 274deg,
+      rgba(20,110,72,.36) 274deg 280deg,
+      rgba(160,15,20,.42) 280deg 291deg,
+      rgba(16,20,22,.48) 291deg 302deg,
+      rgba(20,110,72,.36) 302deg 308deg,
+      rgba(160,15,20,.42) 308deg 319deg,
+      rgba(16,20,22,.48) 319deg 330deg,
+      rgba(20,110,72,.36) 330deg 336deg,
+      rgba(160,15,20,.42) 336deg 347deg,
+      rgba(16,20,22,.48) 347deg 360deg);
+  opacity:.26;
   mix-blend-mode:screen;
-  box-shadow:0 0 12px rgba(255,180,90,.10);
-  mask:radial-gradient(ellipse at center, transparent 0 47%, #000 48% 66%, transparent 67% 100%);
-  -webkit-mask:radial-gradient(ellipse at center, transparent 0 47%, #000 48% 66%, transparent 67% 100%);
+  mask:radial-gradient(ellipse at center, transparent 0 58%, #000 59% 71%, transparent 72% 100%);
+  -webkit-mask:radial-gradient(ellipse at center, transparent 0 58%, #000 59% 71%, transparent 72% 100%);
 }
 #ball{
   position:absolute;
-  width:1.2%;
+  width:1.15%;
   aspect-ratio:1 / 1;
   border-radius:50%;
   background:radial-gradient(circle at 35% 35%,#fff,#dadada 55%,#888 100%);
   box-shadow:0 0 10px rgba(255,255,255,.28);
   z-index:9;
-  left:50%;
-  top:50%;
+  left:50%;top:50%;
   transform:translate(-50%,-50%);
   opacity:.92
 }

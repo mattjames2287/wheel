@@ -96,8 +96,8 @@ function easeOutCubic(t) {
 function positionBall(progress) {
   if (!ball) return;
   const angle = (-Math.PI / 2) + (progress * Math.PI * 2 * 6.2);
-  const rx = 36;
-  const ry = 14;
+  const rx = 34;
+  const ry = 16;
   const x = 50 + Math.cos(angle) * rx;
   const y = 50 + Math.sin(angle) * ry;
   ball.style.left = x + "%";
@@ -134,12 +134,12 @@ function spinToIndex(index, total, callback) {
     const progress = Math.min((now - startTime) / duration, 1);
     const eased = easeOutCubic(progress);
     currentRotation = startDeg + endDeg * eased;
-    if (bowlRing) bowlRing.style.transform = "translate(-50%,-50%) rotate(" + currentRotation + "deg)";
+    if (bowlRing) bowlRing.style.transform = "translate(-50%,-50%) scaleY(.36) rotate(" + currentRotation + "deg)";
     positionBall(progress);
     if (progress < 1) requestAnimationFrame(frame);
     else {
       currentRotation = currentRotation % 360;
-      if (bowlRing) bowlRing.style.transform = "translate(-50%,-50%) rotate(" + currentRotation + "deg)";
+      if (bowlRing) bowlRing.style.transform = "translate(-50%,-50%) scaleY(.36) rotate(" + currentRotation + "deg)";
       positionBall(1);
       isSpinning = false;
       callback && callback();
