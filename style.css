@@ -34,10 +34,10 @@ body{background:#050505;color:var(--cream);font-family:Georgia,serif;overflow:hi
 
 .screen-panel{
   position:absolute;
-  left:41.5%;
-  top:5.55%;
-  width:17.3%;
-  height:51.1%;
+  left:42.9%;
+  top:5.1%;
+  width:14.6%;
+  height:52.6%;
   z-index:6;
   pointer-events:none
 }
@@ -70,7 +70,8 @@ body{background:#050505;color:var(--cream);font-family:Georgia,serif;overflow:hi
   top:50%;
   width:58%;
   height:100%;
-  transform:translate(-50%,-50%);
+  transform:translate(-50%,-50%) scaleY(.42);
+  transform-origin:center center;
   border-radius:50%;
   background:
     conic-gradient(from 0deg,
@@ -117,7 +118,6 @@ body{background:#050505;color:var(--cream);font-family:Georgia,serif;overflow:hi
   box-shadow:0 0 12px rgba(255,180,90,.10);
   mask:radial-gradient(ellipse at center, transparent 0 47%, #000 48% 66%, transparent 67% 100%);
   -webkit-mask:radial-gradient(ellipse at center, transparent 0 47%, #000 48% 66%, transparent 67% 100%);
-  transform-origin:center center;
 }
 #ball{
   position:absolute;

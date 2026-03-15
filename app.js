@@ -96,8 +96,8 @@ function easeOutCubic(t) {
 function positionBall(progress) {
   if (!ball) return;
   const angle = (-Math.PI / 2) + (progress * Math.PI * 2 * 6.2);
-  const rx = 28.5;
-  const ry = 42;
+  const rx = 36;
+  const ry = 14;
   const x = 50 + Math.cos(angle) * rx;
   const y = 50 + Math.sin(angle) * ry;
   ball.style.left = x + "%";
