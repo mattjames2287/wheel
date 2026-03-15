@@ -6,74 +6,70 @@
   <title>Bari Date Night Wheel - Wheel of Things To Do</title>
   <link rel="stylesheet" href="style.css" />
 </head>
-<body class="floor-page">
-  <div class="bg-image"></div>
-  <div class="bg-overlay"></div>
-  <div class="ambient ambient-left"></div>
-  <div class="ambient ambient-right"></div>
-  <div class="ambient ambient-center"></div>
+<body>
+  <main class="page">
+    <section class="scene">
+      <div class="scene-bg"></div>
+      <div class="scene-vignette"></div>
+      <div class="scene-light light-a"></div>
+      <div class="scene-light light-b"></div>
+      <div class="scene-light light-c"></div>
 
-  <header class="page-header">
-    <div class="brand-kicker">BARI DATE NIGHT WHEEL</div>
-    <h1>Bari Date Night Wheel - Wheel of Things To Do</h1>
-    <p>Spin for something fun, or use Surprise Night to pick the activity, restaurant, and movie vibe.</p>
-    <div class="header-actions">
-      <a class="btn ghost" href="add.html">Add Activity</a>
-    </div>
-  </header>
+      <div class="screen-panel">
+        <div class="screen-inner">
+          <div class="screen-kicker">BARI DATE NIGHT WHEEL</div>
+          <div id="screenMain" class="screen-main">READY</div>
+          <div id="screenSub" class="screen-sub">Press SPIN to start</div>
+        </div>
+      </div>
 
-  <section class="controls-wrap">
-    <div class="controls-panel">
-      <label for="bucket">Budget</label>
-      <select id="bucket">
-        <option value="all">All</option>
-        <option value="0-25">$0-25</option>
-        <option value="25-50">$25-50</option>
-        <option value="50-100">$50-100</option>
-        <option value="100+">$100+</option>
-      </select>
+      <div class="header-strip">
+        <div class="title-block">
+          <div class="eyebrow">BARI DATE NIGHT WHEEL</div>
+          <h1>Wheel of Things To Do</h1>
+        </div>
+        <a class="btn btn-ghost" href="add.html">Add Activity</a>
+      </div>
 
-      <div class="button-row">
-        <button class="btn gold" id="spin" type="button">Spin</button>
-        <button class="btn dark" id="surprise" type="button">Surprise Night</button>
-        <button class="btn dark" id="reloadData" type="button">Reload</button>
+      <div class="controls-panel">
+        <label for="bucket">Budget</label>
+        <select id="bucket">
+          <option value="all">All</option>
+          <option value="0-25">$0-25</option>
+          <option value="25-50">$25-50</option>
+          <option value="50-100">$50-100</option>
+          <option value="100+">$100+</option>
+        </select>
+
+        <div class="button-row">
+          <button class="btn btn-gold" id="spin" type="button">Spin</button>
+          <button class="btn btn-dark" id="surprise" type="button">Surprise Night</button>
+          <button class="btn btn-dark" id="reloadData" type="button">Reload</button>
+        </div>
+      </div>
+
+      <div class="wheel-zone">
+        <div class="pointer"></div>
+        <canvas id="wheel" width="760" height="760" aria-label="roulette wheel"></canvas>
+        <div id="ball"></div>
+        <div class="hub-cap"></div>
+      </div>
+    </section>
+
+    <div id="winnerOverlay" class="overlay hidden">
+      <div class="overlay-card">
+        <div class="overlay-kicker">Tonight's Pick</div>
+        <div id="winnerText" class="overlay-main"></div>
+        <div id="winnerSub" class="overlay-sub"></div>
+        <div class="overlay-actions">
+          <button class="btn btn-gold" id="spinAgain" type="button">Spin Again</button>
+          <button class="btn btn-dark" id="closeWinner" type="button">Close</button>
+        </div>
       </div>
     </div>
-  </section>
 
-  <section class="sign-screen">
-    <div class="screen-label">WHEEL RESULT</div>
-    <div id="screenMain" class="screen-main">READY</div>
-    <div id="screenSub" class="screen-sub">Pick a budget and press Spin.</div>
-  </section>
-
-  <section class="winning-number">
-    <div class="winning-label">WINNING PICK</div>
-    <div id="winnerBadgeMain" class="winner-badge-main">--</div>
-    <div id="winnerBadgeSub" class="winner-badge-sub">Waiting</div>
-  </section>
-
-  <section class="wheel-stage">
-    <div class="wheel-ring">
-      <div class="pointer"></div>
-      <canvas id="wheel" width="760" height="760"></canvas>
-      <div class="wheel-center">PLAY</div>
-    </div>
-  </section>
-
-  <div id="winnerOverlay" class="overlay hidden">
-    <div class="overlay-card">
-      <div class="overlay-kicker">Tonight's Pick</div>
-      <div id="winnerText" class="overlay-main"></div>
-      <div id="winnerSub" class="overlay-sub"></div>
-      <div class="overlay-actions">
-        <button class="btn gold" id="spinAgain" type="button">Spin Again</button>
-        <button class="btn dark" id="closeWinner" type="button">Close</button>
-      </div>
-    </div>
-  </div>
-
-  <div id="confettiLayer"></div>
+    <div id="confettiLayer"></div>
+  </main>
 
   <script src="app.js"></script>
 </body>

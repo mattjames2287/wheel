@@ -5,21 +5,18 @@
   <title>Add Activity</title>
   <link rel="stylesheet" href="style.css">
 </head>
-<body class="floor-page add-page">
-  <div class="bg-image"></div>
-  <div class="bg-overlay"></div>
+<body class="add-page">
+  <div class="add-shell">
+    <header class="page-header">
+      <div class="brand-kicker">BARI DATE NIGHT WHEEL</div>
+      <h1>Add Activity</h1>
+      <p>Adds to your shared wheel list.</p>
+      <div class="header-actions">
+        <a class="btn btn-ghost" href="index.html">Back to Wheel</a>
+      </div>
+    </header>
 
-  <header class="page-header">
-    <div class="brand-kicker">BARI DATE NIGHT WHEEL</div>
-    <h1>Add Activity</h1>
-    <p>Adds to your shared wheel list.</p>
-    <div class="header-actions">
-      <a class="btn ghost" href="index.html">Back to Wheel</a>
-    </div>
-  </header>
-
-  <section class="form-wrap">
-    <div class="controls-panel">
+    <section class="add-card">
       <label>Emoji</label>
       <input id="emoji" class="form-input" placeholder="🎳">
       <label style="margin-top:10px;display:block;">Activity</label>
@@ -36,11 +33,11 @@
       <label style="margin-top:10px;display:block;">Movie Genre</label>
       <input id="movie" class="form-input" placeholder="Comedy">
       <div class="button-row">
-        <button id="submitBtn" class="btn gold" type="button">Add Activity</button>
+        <button id="submitBtn" class="btn btn-gold" type="button">Add Activity</button>
       </div>
-    </div>
-    <div id="formStatus" class="status-box">Ready.</div>
-  </section>
+      <div id="formStatus" class="status-box">Ready.</div>
+    </section>
+  </div>
 
   <script>
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbztoxKIHtLnHcZmNiL7HyMU6r8k4ze5caW4q2tc7vHk_-XvHvyYc-QtFKV2v6xCCpyK/exec";
