@@ -1,107 +1,56 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Vegas Date Night Roulette</title>
-  <link rel="stylesheet" href="style.css" />
+<meta charset="UTF-8">
+<title>Bari Date Night Wheel - Wheel of Things To Do</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="casino-room">
-    <div class="vignette"></div>
-    <div class="ceiling-glow"></div>
-    <div class="back-wall"></div>
 
-    <div class="slot-bank left-bank">
-      <div class="slot-machine"><div class="slot-top"></div><div class="slot-screen"><span>777</span></div><div class="slot-lights"></div></div>
-      <div class="slot-machine"><div class="slot-top"></div><div class="slot-screen"><span>BAR</span></div><div class="slot-lights"></div></div>
-      <div class="slot-machine"><div class="slot-top"></div><div class="slot-screen"><span>♦ ♣ ♥ ♠</span></div><div class="slot-lights"></div></div>
-    </div>
+<div class="casino-room">
+<div class="vignette"></div>
+<div class="ceiling-glow"></div>
+</div>
 
-    <div class="slot-bank right-bank">
-      <div class="slot-machine"><div class="slot-top"></div><div class="slot-screen"><span>777</span></div><div class="slot-lights"></div></div>
-      <div class="slot-machine"><div class="slot-top"></div><div class="slot-screen"><span>BAR</span></div><div class="slot-lights"></div></div>
-      <div class="slot-machine"><div class="slot-top"></div><div class="slot-screen"><span>♦ ♣ ♥ ♠</span></div><div class="slot-lights"></div></div>
-    </div>
-  </div>
+<header class="topbar">
+<div>
+<div class="eyebrow">BARI DATE NIGHT WHEEL</div>
+<h1>Bari Date Night Wheel - Wheel of Things To Do</h1>
+<p class="top-sub">A casino-style wheel for picking what to do next.</p>
+</div>
+<div class="top-actions">
+<a class="mini-btn" href="add.html">Add Activity</a>
+</div>
+</header>
 
-  <header class="topbar">
-    <div>
-      <div class="eyebrow">High Limit Lounge</div>
-      <h1>Vegas Date Night Roulette</h1>
-      <p class="top-sub">A classy date-night draw from your shared live list.</p>
-    </div>
-    <div class="top-actions">
-      <a class="mini-btn" href="add.html">Add Activity</a>
-      <button id="musicToggle" class="mini-btn" type="button">♪ Start Music</button>
-    </div>
-  </header>
+<main class="table-scene">
+<section class="table-felt">
 
-  <main class="table-scene marquee-frame">
-    <section class="table-felt">
-      <div class="felt-marking top-marking"></div>
-      <div class="felt-marking bottom-marking"></div>
+<aside class="controls">
+<label class="label">Budget</label>
+<select id="bucket">
+<option value="all">All</option>
+<option value="0-25">$0-25</option>
+<option value="25-50">$25-50</option>
+<option value="50-100">$50-100</option>
+<option value="100+">$100+</option>
+</select>
 
-      <aside class="controls">
-        <label class="label">Budget</label>
-        <select id="bucket">
-          <option value="all">All</option>
-          <option value="0-25">$0-25</option>
-          <option value="25-50">$25-50</option>
-          <option value="50-100">$50-100</option>
-          <option value="100+">$100+</option>
-        </select>
+<button id="spin" class="gold-btn">Spin</button>
+<button id="surprise" class="dark-btn">Surprise Night</button>
 
-        <button id="spin" class="gold-btn" type="button">Spin</button>
-        <button id="dateNight" class="dark-btn" type="button">Date Night</button>
-        <button id="reloadData" class="dark-btn" type="button">Reload</button>
+<div id="result" class="result-box">Choose a budget and spin.</div>
+</aside>
 
-        <div class="meta">
-          <div><span id="activityCount">0</span> activities</div>
-          <div>Auto refresh every 30s</div>
-          <div id="lastUpdated">waiting...</div>
-        </div>
+<section class="wheel-area">
+<div class="pointer"></div>
+<canvas id="wheel" width="720" height="720"></canvas>
+</section>
 
-        <div id="result" class="result-box">Choose a budget and spin.</div>
-      </aside>
+</section>
+<div class="table-rail"></div>
+</main>
 
-      <section class="wheel-area">
-        <div class="pointer"></div>
-        <div class="wheel-shell">
-          <div class="wheel-shadow"></div>
-          <canvas id="wheel" width="720" height="720"></canvas>
-          <div class="wheel-center">PLAY</div>
-        </div>
-      </section>
-    </section>
-
-    <div class="table-rail">
-      <div class="rail-brass"></div>
-      <div class="chip-stack">
-        <span class="chip red"></span>
-        <span class="chip black"></span>
-        <span class="chip gold"></span>
-      </div>
-      <div class="drink-shadow"></div>
-      <div class="rail-shine"></div>
-    </div>
-  </main>
-
-  <div id="winnerOverlay" class="overlay hidden">
-    <div class="winner-card">
-      <div class="winner-label">Winner</div>
-      <h2 id="winnerText"></h2>
-      <p id="winnerSub"></p>
-      <div class="winner-actions">
-        <button id="spinAgain" class="gold-btn" type="button">Spin Again</button>
-        <button id="closeWinner" class="dark-btn" type="button">Close</button>
-      </div>
-    </div>
-  </div>
-
-  <div id="confettiLayer"></div>
-  <div id="coinLayer"></div>
-
-  <script src="app.js"></script>
+<script src="app.js"></script>
 </body>
 </html>
