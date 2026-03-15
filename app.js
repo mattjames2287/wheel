@@ -119,7 +119,6 @@ function playTicking(duration = 5200) {
 function spinToIndex(index, total, callback) {
   if (isSpinning) return;
   isSpinning = true;
-
   const slice = 360 / total;
   const targetDeg = 360 - (index * slice) - (slice / 2);
   const extraSpins = 360 * (7 + Math.random() * 1.5);
@@ -136,10 +135,8 @@ function spinToIndex(index, total, callback) {
     currentRotation = startDeg + endDeg * eased;
     if (rotor) rotor.style.transform = "rotate(" + currentRotation + "deg)";
     positionBall(progress);
-
-    if (progress < 1) {
-      requestAnimationFrame(frame);
-    } else {
+    if (progress < 1) requestAnimationFrame(frame);
+    else {
       currentRotation = currentRotation % 360;
       if (rotor) rotor.style.transform = "rotate(" + currentRotation + "deg)";
       positionBall(1);
@@ -147,7 +144,6 @@ function spinToIndex(index, total, callback) {
       callback && callback();
     }
   }
-
   requestAnimationFrame(frame);
 }
 
@@ -172,7 +168,7 @@ function runSurpriseNight() {
     const title = (safeText(activityWinner.emoji) + " " + safeText(activityWinner.activity)).trim();
     const restaurant = restaurantWinner ? safeText(restaurantWinner.restaurant) : "CHEF'S CHOICE";
     const movie = movieWinner ? safeText(movieWinner.movie) : "SURPRISE PICK";
-    setDisplay(title, restaurant + " • " + movie);
+    setDisplay(title, "RESTAURANT: " + restaurant + " • MOVIE: " + movie);
   });
 }
 
@@ -180,12 +176,5 @@ if (spinBtn) spinBtn.addEventListener("click", runClassicSpin);
 if (surpriseBtn) surpriseBtn.addEventListener("click", runSurpriseNight);
 if (reloadBtn) reloadBtn.addEventListener("click", loadActivities);
 
-if (bucketSelect) {
-  bucketSelect.addEventListener("change", () => {
-    if (!isSpinning) setDisplay("READY", "PRESS SPIN TO START");
-  });
-}
-
 loadActivities();
 startAutoRefresh();
-positionBall(0);
