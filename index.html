@@ -19,7 +19,7 @@
         <div class="screen-inner">
           <div class="screen-kicker">BARI DATE NIGHT WHEEL</div>
           <div id="screenMain" class="screen-main">READY</div>
-          <div id="screenSub" class="screen-sub">Press SPIN to start</div>
+          <div id="screenSub" class="screen-sub">PRESS SPIN TO START</div>
         </div>
       </div>
 
@@ -40,7 +40,6 @@
           <option value="50-100">$50-100</option>
           <option value="100+">$100+</option>
         </select>
-
         <div class="button-row">
           <button class="btn btn-gold" id="spin" type="button">Spin</button>
           <button class="btn btn-dark" id="surprise" type="button">Surprise Night</button>
@@ -50,27 +49,11 @@
 
       <div class="wheel-zone">
         <div class="pointer"></div>
-        <canvas id="wheel" width="760" height="760" aria-label="roulette wheel"></canvas>
+        <img id="rotor" src="roulette-rotor.png" alt="Roulette rotor">
         <div id="ball"></div>
-        <div class="hub-cap"></div>
       </div>
     </section>
-
-    <div id="winnerOverlay" class="overlay hidden">
-      <div class="overlay-card">
-        <div class="overlay-kicker">Tonight's Pick</div>
-        <div id="winnerText" class="overlay-main"></div>
-        <div id="winnerSub" class="overlay-sub"></div>
-        <div class="overlay-actions">
-          <button class="btn btn-gold" id="spinAgain" type="button">Spin Again</button>
-          <button class="btn btn-dark" id="closeWinner" type="button">Close</button>
-        </div>
-      </div>
-    </div>
-
-    <div id="confettiLayer"></div>
   </main>
-
   <script src="app.js"></script>
 </body>
 </html>
